@@ -1,0 +1,54 @@
+@model Verum.Web.Models.ViewModels.NegocioCrecimientoViewModel
+@{
+    ViewData["Title"] = "Negocio - Crecimiento";
+}
+
+<div class="flex flex-col gap-6 max-w-2xl">
+    <div>
+        <div class="text-[19px] font-medium text-paper tracking-tight">Crecimiento &middot; @Model.Business.Name</div>
+        <div class="text-[13px] text-muted mt-1">Evoluci&oacute;n de ventas mes a mes</div>
+    </div>
+
+    @if (Model.GrowthPercent.HasValue)
+    {
+        var positive = Model.GrowthPercent.Value >= 0;
+        <div class="border border-ash rounded-xl bg-graphite p-6" style="@(positive ? "" : "background:rgba(229,72,77,.06)")">
+            <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Vs. mes anterior</div>
+            <div class="font-mono text-[34px] font-medium @(positive ? "text-ascend" : "text-harsh") tracking-tight mt-3">
+                @(positive ? "+" : "")@(Model.GrowthPercent.Value.ToString("0.#"))%
+            </div>
+            <div class="text-[12px] text-muted mt-2">@("$" + Model.PreviousMonthSales.ToString("N0")) &rarr; @("$" + Model.CurrentMonthSales.ToString("N0"))</div>
+        </div>
+    }
+    else if (Model.Months.Count > 0)
+    {
+        <div class="border border-ash rounded-xl bg-graphite p-6">
+            <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Ventas del mes</div>
+            <div class="font-mono text-[34px] font-medium text-paper tracking-tight mt-3">@("$" + Model.CurrentMonthSales.ToString("N0"))</div>
+            <div class="text-[12px] text-muted mt-2">Todav&iacute;a no hay un mes anterior para comparar.</div>
+        </div>
+    }
+
+    <div class="border border-ash rounded-xl bg-graphite p-6">
+        <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted mb-4">&Uacute;ltimos meses</div>
+        @if (Model.Months.Count == 0)
+        {
+            <div class="text-[12.5px] text-muted">A&uacute;n no hay ventas registradas para mostrar una evoluci&oacute;n.</div>
+        }
+        else
+        {
+            <div class="flex flex-col gap-3.5">
+                @foreach (var m in Model.Months)
+                {
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[13px] text-paper capitalize">@m.Label</span>
+                            <span class="font-mono text-[12.5px] text-muted">@("$" + m.Amount.ToString("N0"))</span>
+                        </div>
+                        <div class="h-2 rounded-full bg-ash overflow-hidden"><div class="h-full bg-focus" style="width:@(m.BarPercent)%"></div></div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

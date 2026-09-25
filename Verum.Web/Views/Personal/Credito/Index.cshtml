@@ -1,0 +1,39 @@
+@using Verum.Application.DTOs.Personal
+@model List<CreditAccountDto>
+@{
+    ViewData["Title"] = "Personal - Crédito";
+    var totalAvailable = Model.Sum(c => c.Available);
+}
+
+<div class="flex flex-col gap-6 max-w-2xl">
+    <div class="flex items-baseline justify-between">
+        <div>
+            <div class="text-[19px] font-medium text-paper tracking-tight">Cr&eacute;dito</div>
+            <div class="text-[13px] text-muted mt-1">No es tu dinero, es un l&iacute;mite prestado</div>
+        </div>
+        <a href="/personal/deudas" class="text-[12px] font-medium text-focus">Ver deudas &rarr;</a>
+    </div>
+
+    <div class="border border-ash rounded-xl bg-graphite p-6">
+        <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Cr&eacute;dito disponible</div>
+        <div class="font-mono text-[40px] font-medium text-paper tracking-tight mt-3">@("$" + totalAvailable.ToString("N0"))</div>
+    </div>
+
+    <div class="flex flex-col gap-4">
+        @foreach (var account in Model)
+        {
+            <div class="border border-ash rounded-xl bg-graphite p-6">
+                <div class="flex items-baseline justify-between">
+                    <span class="text-[16px] font-semibold text-paper">@account.Name</span>
+                    <span class="font-mono text-[13px] text-muted">@(account.PercentUsed)% usado</span>
+                </div>
+                <div class="font-mono text-[15px] text-paper mt-2.5">@("$" + account.UsedAmount.ToString("N0")) <span class="text-muted">de @("$" + account.CreditLimit.ToString("N0"))</span></div>
+                <div class="h-1 rounded-full bg-ash mt-4 overflow-hidden"><div class="h-full bg-paper" style="width:@(account.PercentUsed)%"></div></div>
+                <div class="flex items-center justify-between mt-3.5">
+                    <span class="text-[12px] text-muted">Corte @account.CutoffDate.ToString("d MMM")</span>
+                    <span class="text-[12px] text-muted">Pago @account.DueDate.ToString("d MMM")</span>
+                </div>
+            </div>
+        }
+    </div>
+</div>

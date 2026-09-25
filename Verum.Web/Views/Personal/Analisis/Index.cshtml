@@ -1,0 +1,53 @@
+@model Verum.Web.Models.ViewModels.AnalisisViewModel
+@{
+    ViewData["Title"] = "Personal - Análisis";
+}
+
+<div class="flex flex-col gap-6 max-w-2xl">
+    <div>
+        <div class="text-[19px] font-medium text-paper tracking-tight">An&aacute;lisis</div>
+        <div class="text-[13px] text-muted mt-1">En qu&eacute; se fue tu dinero este periodo</div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-px bg-graphite-2 border border-ash rounded-xl overflow-hidden">
+        <div class="bg-graphite p-6">
+            <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Ingresos</div>
+            <div class="font-mono text-[22px] font-medium text-paper mt-3">@("$" + Model.IncomeReceived.ToString("N0"))</div>
+        </div>
+        <div class="bg-graphite p-6">
+            <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Compromisos</div>
+            <div class="font-mono text-[22px] font-medium text-paper mt-3">@("$" + Model.CommitmentsTotal.ToString("N0"))</div>
+        </div>
+        <div class="p-6" style="background:#0D1014">
+            <div class="text-[10.5px] text-ascend">Margen</div>
+            <div class="font-mono text-[22px] font-medium text-ascend mt-3">@("$" + Model.Margin.ToString("N0"))</div>
+        </div>
+    </div>
+
+    <div class="border border-ash rounded-xl bg-graphite p-6">
+        <div class="flex items-baseline justify-between mb-4">
+            <span class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Gastos por categor&iacute;a</span>
+            <span class="font-mono text-[13px] text-muted">@("$" + Model.ExpensesTotal.ToString("N0")) total</span>
+        </div>
+
+        @if (Model.ByCategory.Count == 0)
+        {
+            <div class="text-[12.5px] text-muted">A&uacute;n no hay gastos registrados este periodo.</div>
+        }
+        else
+        {
+            <div class="flex flex-col gap-4">
+                @foreach (var item in Model.ByCategory)
+                {
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[13px] text-paper">@item.Category</span>
+                            <span class="font-mono text-[12.5px] text-muted">@("$" + item.Amount.ToString("N0")) &middot; @(item.Percent)%</span>
+                        </div>
+                        <div class="h-1.5 rounded-full bg-ash overflow-hidden"><div class="h-full bg-focus" style="width:@(item.Percent)%"></div></div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

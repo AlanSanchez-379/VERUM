@@ -1,0 +1,39 @@
+@using Verum.Application.DTOs.Personal
+@model List<GoalDto>
+@{
+    ViewData["Title"] = "Personal - Metas";
+}
+
+<div class="flex flex-col gap-6 max-w-2xl">
+    <div>
+        <div class="text-[19px] font-medium text-paper tracking-tight">Tus metas</div>
+        <div class="text-[13px] text-muted mt-1">Hacia d&oacute;nde va tu dinero</div>
+    </div>
+
+    <div class="flex flex-col gap-4">
+        @foreach (var goal in Model)
+        {
+            var priorityClasses = goal.Priority == "Alta"
+                ? "text-focus border-focus/40"
+                : goal.Priority == "Media"
+                    ? "text-muted border-ash-light"
+                    : "text-muted border-ash";
+            <div class="border border-ash rounded-xl bg-graphite p-6">
+                <div class="flex items-baseline justify-between">
+                    <span class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Meta</span>
+                    <span class="text-[10px] font-medium uppercase tracking-[0.08em] @priorityClasses border rounded px-1.5 py-0.5">@goal.Priority</span>
+                </div>
+                <div class="flex items-baseline justify-between mt-4">
+                    <span class="text-[19px] font-semibold text-paper">@goal.Name</span>
+                    <span class="font-mono text-[13px] text-muted">@(goal.PercentComplete)%</span>
+                </div>
+                <div class="font-mono text-[15px] text-paper mt-2.5">@("$" + goal.CurrentAmount.ToString("N0")) <span class="text-muted">/ @("$" + goal.TargetAmount.ToString("N0"))</span></div>
+                <div class="h-1 rounded-full bg-ash mt-4 overflow-hidden"><div class="h-full bg-paper" style="width:@(goal.PercentComplete)%"></div></div>
+                <div class="flex items-center justify-between mt-3.5">
+                    <span class="text-[12px] text-muted">Faltan @("$" + goal.Remaining.ToString("N0"))</span>
+                    <span class="text-[12px] text-muted">@goal.TargetDate.ToString("d MMM yyyy")</span>
+                </div>
+            </div>
+        }
+    </div>
+</div>

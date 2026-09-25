@@ -1,0 +1,130 @@
+<aside class="hidden md:flex md:flex-col w-[248px] shrink-0 border-r border-graphite-2 py-6">
+    <div class="flex items-center gap-2.5 px-6 pb-8">
+        <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
+            <path d="M4.6 8.2 L12.4 25.8" stroke="#F5F6F7" stroke-width="3.4" stroke-linecap="square" />
+            <path d="M18.4 13.4 L14.6 24.6" stroke="#F5F6F7" stroke-width="3.4" stroke-linecap="square" />
+            <path d="M12.6 22.4 L22.2 6.8" stroke="#F5F6F7" stroke-width="2.4" stroke-linecap="square" />
+            <path d="M26 1.4 L17.2 3.9 L23.4 11 Z" fill="#F5F6F7" />
+        </svg>
+        <span class="font-semibold text-[13px] tracking-[0.3em] text-paper">VERUM</span>
+    </div>
+
+    <div class="text-[10px] font-medium uppercase tracking-[0.16em] text-muted px-6 pb-3">Personal</div>
+    <nav class="flex flex-col gap-0.5 px-3">
+        <a href="/Dashboard" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><path d="M3.5 10.5 11.9 3.6 20.4 10.5V20H3.5z" stroke="currentColor" stroke-width="1.5" /></svg>
+            Inicio
+        </a>
+        <a href="/personal/dinero" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><rect x="3.2" y="6.2" width="17.6" height="12.6" rx="2.4" stroke="currentColor" stroke-width="1.5" /><path d="M3.2 11h17.6" stroke="currentColor" stroke-width="1.5" /></svg>
+            Realidad
+        </a>
+        <a href="/personal/cuentas" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" stroke-width="1.5" /><path d="M4 10h16" stroke="currentColor" stroke-width="1.5" /></svg>
+            Cuentas
+        </a>
+        <a asp-controller="Compromisos" asp-action="Index" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><path d="M5 8h14M5 12h14M5 16h9" stroke="currentColor" stroke-width="1.5" /></svg>
+            Compromisos
+        </a>
+        <a asp-controller="Deudas" asp-action="Index" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.5" /><path d="M3 10h18" stroke="currentColor" stroke-width="1.5" /></svg>
+            Deudas y crédito
+        </a>
+        <a href="/personal/metas" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><circle cx="12" cy="12" r="8.4" stroke="currentColor" stroke-width="1.5" /><circle cx="12" cy="12" r="2.6" stroke="currentColor" stroke-width="1.5" /></svg>
+            Metas
+        </a>
+        <a href="/personal/simulacion" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><path d="M4 18l5-7 4 4 6-9" stroke="currentColor" stroke-width="1.5" /></svg>
+            Simulación
+        </a>
+        <a href="/personal/analisis" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><path d="M5 19V9M12 19V5M19 19v-7" stroke="currentColor" stroke-width="1.5" /></svg>
+            Análisis
+        </a>
+    </nav>
+
+    <div class="text-[10px] font-medium uppercase tracking-[0.16em] text-muted px-6 pt-8 pb-3">Negocios</div>
+    <nav class="flex flex-col gap-0.5 px-3">
+        <a href="/negocio" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><rect x="3.2" y="7.4" width="17.6" height="11.4" rx="2.2" stroke="currentColor" stroke-width="1.5" /><path d="M9 7.4V5.6a1.4 1.4 0 0 1 1.4-1.4h3.2A1.4 1.4 0 0 1 15 5.6v1.8" stroke="currentColor" stroke-width="1.5" /></svg>
+            Mis negocios
+        </a>
+        <a href="/negocio/dashboard" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><path d="M3.5 10.5 11.9 3.6 20.4 10.5V20H3.5z" stroke="currentColor" stroke-width="1.5" /></svg>
+            Inicio
+        </a>
+        <a href="/negocio/dinero" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><rect x="3.2" y="6.2" width="17.6" height="12.6" rx="2.4" stroke="currentColor" stroke-width="1.5" /><path d="M3.2 11h17.6" stroke="currentColor" stroke-width="1.5" /></svg>
+            Realidad
+        </a>
+        <a href="/negocio/ventas" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><path d="M4 18l5-7 4 4 6-9" stroke="currentColor" stroke-width="1.5" /></svg>
+            Ventas
+        </a>
+        <a href="/negocio/gastos" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><rect x="3.2" y="6.2" width="17.6" height="12.6" rx="2.4" stroke="currentColor" stroke-width="1.5" /><path d="M3.2 11h17.6" stroke="currentColor" stroke-width="1.5" /></svg>
+            Gastos
+        </a>
+        <a href="/negocio/porcobrar" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><path d="M5 8h14M5 12h14M5 16h9" stroke="currentColor" stroke-width="1.5" /></svg>
+            Por cobrar
+        </a>
+        <a href="/negocio/proveedores" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.5" /><path d="M3 10h18" stroke="currentColor" stroke-width="1.5" /></svg>
+            Proveedores
+        </a>
+        <a href="/negocio/metas" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><circle cx="12" cy="12" r="8.4" stroke="currentColor" stroke-width="1.5" /><circle cx="12" cy="12" r="2.6" stroke="currentColor" stroke-width="1.5" /></svg>
+            Metas
+        </a>
+        <a href="/negocio/prioridades" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><path d="M4 18l5-7 4 4 6-9" stroke="currentColor" stroke-width="1.5" /></svg>
+            Prioridades
+        </a>
+        <a href="/negocio/simulacion" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><path d="M4 18l5-7 4 4 6-9" stroke="currentColor" stroke-width="1.5" /></svg>
+            Simulaci&oacute;n
+        </a>
+        <a href="/negocio/analisis" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><path d="M5 19V9M12 19V5M19 19v-7" stroke="currentColor" stroke-width="1.5" /></svg>
+            An&aacute;lisis
+        </a>
+        <a href="/negocio/alcance" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><circle cx="12" cy="12" r="8.4" stroke="currentColor" stroke-width="1.5" /><circle cx="12" cy="12" r="2.6" stroke="currentColor" stroke-width="1.5" /></svg>
+            Alcance
+        </a>
+        <a href="/negocio/rentabilidad" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><rect x="3.2" y="6.2" width="17.6" height="12.6" rx="2.4" stroke="currentColor" stroke-width="1.5" /><path d="M3.2 11h17.6" stroke="currentColor" stroke-width="1.5" /></svg>
+            Rentabilidad
+        </a>
+        <a href="/negocio/costos" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><path d="M5 8h14M5 12h14M5 16h9" stroke="currentColor" stroke-width="1.5" /></svg>
+            Costos
+        </a>
+        <a href="/negocio/impuestos" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.5" /><path d="M3 10h18" stroke="currentColor" stroke-width="1.5" /></svg>
+            Impuestos
+        </a>
+        <a href="/negocio/inversiones" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><path d="M4 18l5-7 4 4 6-9" stroke="currentColor" stroke-width="1.5" /></svg>
+            Inversiones
+        </a>
+        <a href="/negocio/crecimiento" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><path d="M5 19V9M12 19V5M19 19v-7" stroke="currentColor" stroke-width="1.5" /></svg>
+            Crecimiento
+        </a>
+    </nav>
+
+    <div class="mt-auto px-3">
+        <a href="#" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5" /><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5" /></svg>
+            Configuración
+        </a>
+        <a href="/auth/logout" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] text-muted hover:text-paper hover:bg-graphite-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="shrink-0"><path d="M15 4h3.6A1.4 1.4 0 0 1 20 5.4v13.2a1.4 1.4 0 0 1-1.4 1.4H15M10 8l-4 4 4 4M6 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /></svg>
+            Cerrar sesión
+        </a>
+    </div>
+</aside>

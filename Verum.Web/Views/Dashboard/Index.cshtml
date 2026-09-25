@@ -1,0 +1,178 @@
+@model Verum.Web.Models.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="flex flex-col gap-6 md:gap-8">
+
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+            <div class="text-[19px] md:text-[21px] font-medium text-paper tracking-tight">Buenas tardes, Andrés</div>
+            <div class="text-[13px] text-muted mt-1">Esta es tu realidad &middot; @DateTime.Now.ToString("d MMMM yyyy")</div>
+        </div>
+        <div class="hidden md:flex items-center gap-2.5">
+            <a href="/personal/simulacion" class="rounded-lg border border-ash px-3.5 py-2.5 text-[12.5px] font-medium text-paper">
+                &iquest;Qu&eacute; pasa si...?
+            </a>
+            <a href="/personal/gastos" class="flex items-center gap-2 rounded-lg bg-paper px-4 py-2.5">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#090A0C" stroke-width="2.2" stroke-linecap="round" /></svg>
+                <span class="text-[12.5px] font-semibold text-obsidian">Registrar</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-[1.15fr_1fr_1fr_1fr] gap-px bg-graphite-2 border border-ash rounded-xl overflow-hidden">
+        <div class="bg-graphite p-6 md:p-7">
+            <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Dinero disponible</div>
+            <div class="font-mono text-[40px] md:text-[44px] leading-none font-medium text-paper tracking-tight mt-3">@("$" + Model.TotalAvailable.ToString("N0"))</div>
+            <div class="flex items-center gap-2.5 mt-3.5 text-[12px]">
+                <span class="text-muted">En @Model.Accounts.Count cuentas</span>
+            </div>
+        </div>
+        <div class="bg-graphite p-6 md:p-6">
+            <div class="text-[11.5px] text-muted">Ingresos recibidos</div>
+            <div class="font-mono text-[26px] font-medium text-paper mt-3">@("$" + Model.IncomeReceived.ToString("N0"))</div>
+            <div class="text-[11px] text-muted mt-2.5">@Model.IncomeReceivedCount de @Model.IncomeTotalCount esperado(s)</div>
+        </div>
+        <div class="bg-graphite p-6 md:p-6">
+            <div class="text-[11.5px] text-muted">Compromisos</div>
+            <div class="font-mono text-[26px] font-medium text-paper mt-3">@("$" + Model.CommitmentsTotal.ToString("N0"))</div>
+            <div class="text-[11px] text-muted mt-2.5">@(Model.CommittedPercent)% del ingreso recibido</div>
+        </div>
+        <div class="p-6 md:p-6" style="background:#0D1014">
+            <div class="text-[11.5px] text-ascend">Margen disponible</div>
+            <div class="font-mono text-[26px] font-medium text-ascend mt-3">@("$" + Model.Margin.ToString("N0"))</div>
+            <div class="text-[11px] text-muted mt-2.5">Gastado @("$" + Model.ExpensesTotal.ToString("N0"))</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-[1.6fr_1fr] gap-5">
+        <div class="border border-ash rounded-xl bg-graphite p-6">
+            <div class="flex items-baseline justify-between">
+                <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Tu margen</div>
+                <div class="text-[12px] text-muted">de @("$" + Model.IncomeReceived.ToString("N0")) recibidos</div>
+            </div>
+            <div class="flex h-2 rounded overflow-hidden gap-px mt-4">
+                <div style="width:@(Model.CommittedPercent)%;background:#343A43"></div>
+                <div style="width:@(Model.SpentPercent)%;background:#4A5260"></div>
+                <div class="bg-ascend" style="width:@(Model.MarginPercent)%"></div>
+            </div>
+            <div class="flex flex-col mt-4">
+                <div class="flex items-center gap-3 py-2.5 border-b border-graphite-2">
+                    <span class="h-2 w-2 rounded-sm" style="background:#343A43"></span>
+                    <span class="flex-1 text-[13px] text-muted">Comprometido</span>
+                    <span class="font-mono text-[14px] text-paper">@("$" + Model.CommitmentsTotal.ToString("N0"))</span>
+                    <span class="font-mono text-[11px] text-muted w-9 text-right">@(Model.CommittedPercent)%</span>
+                </div>
+                <div class="flex items-center gap-3 py-2.5 border-b border-graphite-2">
+                    <span class="h-2 w-2 rounded-sm" style="background:#4A5260"></span>
+                    <span class="flex-1 text-[13px] text-muted">Ya gastado</span>
+                    <span class="font-mono text-[14px] text-paper">@("$" + Model.ExpensesTotal.ToString("N0"))</span>
+                    <span class="font-mono text-[11px] text-muted w-9 text-right">@(Model.SpentPercent)%</span>
+                </div>
+                <div class="flex items-center gap-3 py-2.5">
+                    <span class="h-2 w-2 rounded-sm bg-ascend"></span>
+                    <span class="flex-1 text-[13px] font-medium text-paper">Puedes decidir</span>
+                    <span class="font-mono text-[16px] font-semibold text-ascend">@("$" + Model.Margin.ToString("N0"))</span>
+                    <span class="font-mono text-[11px] text-muted w-9 text-right">@(Model.MarginPercent)%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-5">
+            @if (Model.PriorityGoal is { } goal)
+            {
+                <div class="border border-ash rounded-xl bg-graphite p-6">
+                    <div class="flex items-baseline justify-between">
+                        <span class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Meta prioritaria</span>
+                        <span class="text-[10px] font-medium uppercase tracking-[0.08em] text-focus border border-focus/40 rounded px-1.5 py-0.5">@goal.Priority</span>
+                    </div>
+                    <div class="flex items-baseline justify-between mt-4">
+                        <span class="text-[19px] font-semibold text-paper">@goal.Name</span>
+                        <span class="font-mono text-[13px] text-muted">@(goal.PercentComplete)%</span>
+                    </div>
+                    <div class="font-mono text-[15px] text-paper mt-2.5">@("$" + goal.CurrentAmount.ToString("N0")) <span class="text-muted">/ @("$" + goal.TargetAmount.ToString("N0"))</span></div>
+                    <div class="h-1 rounded-full bg-ash mt-4 overflow-hidden"><div class="h-full bg-paper" style="width:@(goal.PercentComplete)%"></div></div>
+                    <div class="flex items-center justify-between mt-3.5">
+                        <span class="text-[12px] text-muted">Faltan @("$" + goal.Remaining.ToString("N0"))</span>
+                        <a href="/personal/metas" class="text-[12px] font-medium text-focus">Ver mi camino &rarr;</a>
+                    </div>
+                </div>
+            }
+
+            <div class="border border-dashed border-ash-light rounded-xl p-6 flex-1" style="background:rgba(46,107,255,.04)">
+                <div class="text-[10px] font-medium uppercase tracking-[0.16em] text-focus">&iquest;Qu&eacute; pasa si...?</div>
+                <div class="text-[14.5px] leading-relaxed text-paper mt-3">Simula un gasto, un ahorro o una inversi&oacute;n antes de decidir. No toca tu realidad.</div>
+                <a href="/personal/simulacion" class="inline-block mt-4 text-[12px] font-medium text-focus">Simular escenario &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="border border-ash rounded-xl bg-graphite p-6">
+            <div class="flex items-baseline justify-between">
+                <span class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Compromisos del periodo</span>
+                <a href="/personal/compromisos" class="text-[11.5px] text-focus">Ver todos</a>
+            </div>
+            <div class="font-mono text-[26px] font-medium text-paper mt-3.5">@("$" + Model.CommitmentsTotal.ToString("N0"))</div>
+            <div class="flex flex-col mt-4">
+                @foreach (var commitment in Model.Commitments)
+                {
+                    <div class="flex justify-between py-2.5 border-t border-graphite-2">
+                        <span class="text-[12.5px] @(commitment.IsPaid ? "text-muted" : "text-paper")">@commitment.Name</span>
+                        <span class="font-mono text-[12.5px] @(commitment.IsPaid ? "text-muted" : "text-paper")">@("$" + commitment.Amount.ToString("N0"))</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="border border-ash rounded-xl bg-graphite p-6">
+            <div class="flex items-baseline justify-between">
+                <span class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Gastos recientes</span>
+                <a href="/personal/gastos" class="text-[11.5px] text-focus">Registrar</a>
+            </div>
+            <div class="flex flex-col mt-2.5">
+                @if (Model.RecentExpenses.Count == 0)
+                {
+                    <div class="py-3.5 text-[12.5px] text-muted">A&uacute;n no registraste ning&uacute;n gasto.</div>
+                }
+                @for (var i = 0; i < Model.RecentExpenses.Count; i++)
+                {
+                    var expense = Model.RecentExpenses[i];
+                    var borderClass = i < Model.RecentExpenses.Count - 1 ? "border-b border-graphite-2" : "";
+                    <div class="flex items-center gap-3 py-3.5 @borderClass">
+                        <span class="h-1.5 w-1.5 rounded-full bg-harsh"></span>
+                        <span class="flex-1 text-[12.5px] text-paper">@expense.Category</span>
+                        <span class="font-mono text-[12.5px] font-medium text-paper">-@("$" + expense.Amount.ToString("N0"))</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="border border-ash rounded-xl bg-graphite p-6">
+            <div class="flex items-baseline justify-between">
+                <span class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Tus cuentas</span>
+                <span class="text-[11.5px] text-muted">Dinero real</span>
+            </div>
+            <div class="flex flex-col mt-2.5">
+                @for (var i = 0; i < Model.Accounts.Count; i++)
+                {
+                    var account = Model.Accounts[i];
+                    var borderClass = i < Model.Accounts.Count - 1 ? "border-b border-graphite-2" : "";
+                    <div class="flex justify-between py-3 @borderClass">
+                        <span class="text-[12.5px] text-paper">@account.Name</span>
+                        <span class="font-mono text-[12.5px] font-medium text-paper">@("$" + account.Balance.ToString("N0"))</span>
+                    </div>
+                }
+            </div>
+            @if (Model.CreditAvailable > 0)
+            {
+                <div class="flex justify-between pt-3.5 mt-1 border-t border-ash">
+                    <span class="text-[12px] text-muted">Cr&eacute;dito disponible</span>
+                    <a href="/personal/credito" class="font-mono text-[12px] text-muted">@("$" + Model.CreditAvailable.ToString("N0")) &middot; aparte</a>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

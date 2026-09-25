@@ -1,0 +1,43 @@
+@using Verum.Application.DTOs.Personal
+@model List<IncomeDto>
+@{
+    ViewData["Title"] = "Personal - Ingresos";
+    var received = Model.Where(i => i.IsReceived).Sum(i => i.Amount);
+    var expected = Model.Sum(i => i.Amount);
+}
+
+<div class="flex flex-col gap-6 max-w-2xl">
+    <div>
+        <div class="text-[19px] font-medium text-paper tracking-tight">Ingresos</div>
+        <div class="text-[13px] text-muted mt-1">Lo que entr&oacute; y lo que esperas este periodo</div>
+    </div>
+
+    <div class="border border-ash rounded-xl bg-graphite p-6">
+        <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Recibido este periodo</div>
+        <div class="font-mono text-[40px] font-medium text-paper tracking-tight mt-3">@("$" + received.ToString("N0"))</div>
+        <div class="text-[12px] text-muted mt-2">de @("$" + expected.ToString("N0")) esperado &middot; @Model.Count(i => i.IsReceived) de @Model.Count ingresos</div>
+    </div>
+
+    <div class="flex flex-col gap-2">
+        @foreach (var income in Model)
+        {
+            <div class="flex items-center gap-3.5 rounded-xl border border-ash bg-graphite px-5 py-4">
+                <span class="flex h-[38px] w-[38px] items-center justify-center rounded-lg @(income.IsReceived ? "bg-ascend/15" : "bg-ash")">
+                    @if (income.IsReceived)
+                    {
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#1FB97A" stroke-width="1.8" /></svg>
+                    }
+                    else
+                    {
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#7C8794" stroke-width="1.5" /></svg>
+                    }
+                </span>
+                <span class="flex-1">
+                    <span class="block text-[14.5px] font-medium text-paper">@income.Source</span>
+                    <span class="mt-0.5 block text-[11.5px] text-muted">@(income.IsReceived ? "Recibido" : "Esperado") &middot; @income.ExpectedDate.ToString("d MMM")</span>
+                </span>
+                <span class="font-mono text-[15px] font-medium text-paper">@("$" + income.Amount.ToString("N0"))</span>
+            </div>
+        }
+    </div>
+</div>

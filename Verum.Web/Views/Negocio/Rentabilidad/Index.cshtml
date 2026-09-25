@@ -1,0 +1,41 @@
+@model Verum.Web.Models.ViewModels.NegocioRentabilidadViewModel
+@{
+    ViewData["Title"] = "Negocio - Rentabilidad";
+}
+
+<div class="flex flex-col gap-6 max-w-2xl">
+    <div>
+        <div class="text-[19px] font-medium text-paper tracking-tight">Rentabilidad &middot; @Model.Business.Name</div>
+        <div class="text-[13px] text-muted mt-1">Qu&eacute; tan rentable es este negocio hoy</div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-px bg-graphite-2 border border-ash rounded-xl overflow-hidden">
+        <div class="bg-graphite p-6">
+            <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Margen de utilidad</div>
+            <div class="font-mono text-[34px] font-medium text-paper tracking-tight mt-3">@(Model.MarginPercent)%</div>
+            <div class="text-[12px] text-muted mt-2">@("$" + Model.Utility.ToString("N0")) sobre @("$" + Model.TotalSales.ToString("N0")) vendidos</div>
+        </div>
+        <div class="p-6" style="background:#0D1014">
+            <div class="text-[10.5px] text-muted">Costos sobre ventas</div>
+            <div class="font-mono text-[34px] font-medium text-paper mt-3">@(Model.CostRatioPercent)%</div>
+            <div class="text-[12px] text-muted mt-2">@("$" + Model.TotalExpenses.ToString("N0")) en gastos</div>
+        </div>
+    </div>
+
+    <div class="border border-ash rounded-xl bg-graphite p-6">
+        <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted mb-4">Ventas vs. gastos</div>
+        <div class="flex h-2.5 rounded overflow-hidden gap-px">
+            <div class="bg-ascend" style="width:@(Math.Max(0, 100 - Model.CostRatioPercent))%"></div>
+            <div style="width:@(Model.CostRatioPercent)%;background:#4A5260"></div>
+        </div>
+        <div class="flex items-center justify-between mt-3 text-[12px]">
+            <span class="text-muted">Utilidad @(Math.Max(0, 100 - Model.CostRatioPercent))%</span>
+            <span class="text-muted">Gastos @(Model.CostRatioPercent)%</span>
+        </div>
+    </div>
+
+    @if (Model.TotalSales <= 0)
+    {
+        <div class="text-[12.5px] text-muted">A&uacute;n no hay ventas registradas para calcular rentabilidad.</div>
+    }
+</div>

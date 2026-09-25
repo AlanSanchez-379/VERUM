@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@source "../Views/**/*.cshtml";
+@source "../wwwroot/js/**/*.js";
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "Space Grotesk", ui-monospace, monospace;
+
+  /* VERUM design tokens */
+  --color-obsidian: #090A0C;
+  --color-graphite: #111418;
+  --color-graphite-2: #171B20;
+  --color-ash: #252A31;
+  --color-ash-light: #343A43;
+  --color-muted: #7C8794;
+  --color-paper: #F5F6F7;
+
+  --color-focus: #2E6BFF;
+  --color-ascend: #1FB97A;
+  --color-harsh: #E5484D;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-obsidian);
+    color: var(--color-paper);
+  }
+}

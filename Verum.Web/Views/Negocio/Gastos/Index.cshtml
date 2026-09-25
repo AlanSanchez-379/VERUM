@@ -1,0 +1,57 @@
+@model Verum.Web.Models.ViewModels.NegocioExpensesViewModel
+@{
+    ViewData["Title"] = "Negocio - Gastos";
+}
+
+<div id="gastos-app" data-register-url="/negocio/gastos/registrar" class="flex flex-col gap-6 max-w-2xl">
+    <div>
+        <div class="text-[19px] font-medium text-paper tracking-tight">Gastos &middot; @Model.Business.Name</div>
+        <div class="text-[13px] text-muted mt-1">Lo que gast&oacute; este negocio</div>
+    </div>
+
+    <div class="border border-ash rounded-xl bg-graphite p-6">
+        <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Total gastado</div>
+        <div id="gastos-total" class="font-mono text-[40px] font-medium text-paper tracking-tight mt-3">@("$" + Model.Total.ToString("N0"))</div>
+    </div>
+
+    <div class="border border-ash rounded-xl bg-graphite p-6">
+        <div class="text-[13px] font-medium text-paper pb-4">Registrar gasto</div>
+        <div id="gastos-error" class="hidden mb-3 rounded-lg border border-harsh/40 bg-harsh/10 px-3 py-2.5 text-[12px] text-harsh"></div>
+        <div class="flex flex-col gap-3.5">
+            <div>
+                <label class="block text-[11px] font-medium text-muted pb-1.5">Categor&iacute;a</label>
+                <input type="text" id="gastos-category" placeholder="Ej: Insumos, Alquiler, Sueldos"
+                       class="w-full rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-paper outline-none focus:border-focus" />
+            </div>
+            <div>
+                <label class="block text-[11px] font-medium text-muted pb-1.5">Monto</label>
+                <input type="number" id="gastos-amount" min="0" step="0.01"
+                       class="w-full rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-paper outline-none focus:border-focus" />
+            </div>
+            <button type="button" id="gastos-submit" class="mt-2 rounded-lg bg-paper text-obsidian text-[13px] font-medium py-2.5 hover:bg-paper/90">
+                Registrar gasto
+            </button>
+        </div>
+    </div>
+
+    <div id="gastos-list" class="flex flex-col gap-2">
+        @if (Model.Expenses.Count == 0)
+        {
+            <div class="text-[12.5px] text-muted py-3">A&uacute;n no registraste ning&uacute;n gasto.</div>
+        }
+        @foreach (var expense in Model.Expenses.OrderByDescending(e => e.Date))
+        {
+            <div class="flex items-center gap-3.5 rounded-xl border border-ash bg-graphite px-5 py-4">
+                <span class="flex-1">
+                    <span class="block text-[14.5px] font-medium text-paper">@expense.Category</span>
+                    <span class="mt-0.5 block text-[11.5px] text-muted">@expense.Date.ToString("d MMM, HH:mm")</span>
+                </span>
+                <span class="font-mono text-[15px] font-medium text-harsh">-@("$" + expense.Amount.ToString("N0"))</span>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/negocio/gastos.js" defer></script>
+}

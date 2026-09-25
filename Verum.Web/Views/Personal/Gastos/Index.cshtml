@@ -1,0 +1,140 @@
+@using Verum.Application.DTOs.Personal
+@model List<AccountDto>
+@{
+    ViewData["Title"] = "Personal - Registrar gasto";
+    var totalAvailable = Model.Sum(a => a.Balance);
+}
+
+<div id="gasto-app" class="mx-auto flex max-w-md flex-col gap-6" data-available="@totalAvailable" data-register-url="@Url.Action("Registrar", "Gastos")">
+
+    <div class="flex items-center justify-between">
+        <button type="button" data-back class="text-muted invisible" aria-label="Atr&aacute;s">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 6l-7 6 7 6" stroke="currentColor" stroke-width="1.5" /></svg>
+        </button>
+        <span class="text-[13px] font-medium text-paper">Registrar gasto</span>
+        <a href="/Dashboard" class="text-muted" aria-label="Cerrar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.5" /></svg>
+        </a>
+    </div>
+
+    <!-- Paso 1: Monto -->
+    <section data-step="amount" class="flex flex-col gap-8">
+        <div class="flex flex-col items-center gap-4 py-6 text-center">
+            <div class="text-[12.5px] text-muted">&iquest;Cu&aacute;nto gastaste?</div>
+            <div class="flex items-baseline">
+                <span class="font-mono text-[34px] font-medium text-muted">$</span>
+                <span data-amount-display class="font-mono text-[62px] leading-none font-medium tracking-tight text-paper">0</span>
+                <span class="ml-1.5 block h-[52px] w-[2px] animate-pulse bg-focus"></span>
+            </div>
+            <div class="text-[12px] text-muted">Te quedar&iacute;an <span data-after-amount class="font-mono text-muted">$13,200</span> disponibles</div>
+        </div>
+        <div class="grid grid-cols-3 gap-2.5" data-keypad>
+            <button type="button" data-key="1" class="h-14 rounded-xl border border-ash bg-graphite-2 font-mono text-[22px] text-paper">1</button>
+            <button type="button" data-key="2" class="h-14 rounded-xl border border-ash bg-graphite-2 font-mono text-[22px] text-paper">2</button>
+            <button type="button" data-key="3" class="h-14 rounded-xl border border-ash bg-graphite-2 font-mono text-[22px] text-paper">3</button>
+            <button type="button" data-key="4" class="h-14 rounded-xl border border-ash bg-graphite-2 font-mono text-[22px] text-paper">4</button>
+            <button type="button" data-key="5" class="h-14 rounded-xl border border-ash bg-graphite-2 font-mono text-[22px] text-paper">5</button>
+            <button type="button" data-key="6" class="h-14 rounded-xl border border-ash bg-graphite-2 font-mono text-[22px] text-paper">6</button>
+            <button type="button" data-key="7" class="h-14 rounded-xl border border-ash bg-graphite-2 font-mono text-[22px] text-paper">7</button>
+            <button type="button" data-key="8" class="h-14 rounded-xl border border-ash bg-graphite-2 font-mono text-[22px] text-paper">8</button>
+            <button type="button" data-key="9" class="h-14 rounded-xl border border-ash bg-graphite-2 font-mono text-[22px] text-paper">9</button>
+            <button type="button" data-key="." class="h-14 rounded-xl font-mono text-[22px] text-muted">.</button>
+            <button type="button" data-key="0" class="h-14 rounded-xl border border-ash bg-graphite-2 font-mono text-[22px] text-paper">0</button>
+            <button type="button" data-key="del" class="flex h-14 items-center justify-center rounded-xl text-muted" aria-label="Borrar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 5h11v14H9L3 12z" stroke="currentColor" stroke-width="1.5" /><path d="M12.5 9.5l4 5M16.5 9.5l-4 5" stroke="currentColor" stroke-width="1.5" /></svg>
+            </button>
+        </div>
+        <button type="button" data-next-from-amount class="h-[52px] rounded-xl bg-paper text-[14px] font-semibold text-obsidian disabled:opacity-40" disabled>Continuar</button>
+    </section>
+
+    <!-- Paso 2: Categoria -->
+    <section data-step="category" class="hidden flex-col gap-8">
+        <div>
+            <div data-amount-full-display class="font-mono text-[38px] font-medium tracking-tight text-paper">$0</div>
+            <div class="mt-4 text-[13px] text-muted">&iquest;En qu&eacute;?</div>
+        </div>
+        <div class="flex flex-wrap gap-2.5" data-tags>
+            <button type="button" data-tag="Comida" class="flex items-center gap-1.5 rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-muted">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 11h13a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" stroke="currentColor" stroke-width="1.5" /><path d="M17 11h2.5a2 2 0 0 1 0 4H17M6 19h9" stroke="currentColor" stroke-width="1.5" /></svg>
+                Comida
+            </button>
+            <button type="button" data-tag="Caf&eacute;" class="flex items-center gap-1.5 rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-muted">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 8h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z" stroke="currentColor" stroke-width="1.5" /><path d="M16 9h2a2 2 0 0 1 0 4h-2" stroke="currentColor" stroke-width="1.5" /></svg>
+                Caf&eacute;
+            </button>
+            <button type="button" data-tag="Transporte" class="flex items-center gap-1.5 rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-muted">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="6" width="17" height="9" rx="2" stroke="currentColor" stroke-width="1.5" /><circle cx="7.5" cy="17" r="1.6" stroke="currentColor" stroke-width="1.5" /><circle cx="16.5" cy="17" r="1.6" stroke="currentColor" stroke-width="1.5" /></svg>
+                Transporte
+            </button>
+            <button type="button" data-tag="Casa" class="flex items-center gap-1.5 rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-muted">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-6.5 8 6.5V20H4z" stroke="currentColor" stroke-width="1.5" /></svg>
+                Casa
+            </button>
+            <button type="button" data-tag="Ocio" class="flex items-center gap-1.5 rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-muted">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.5" /><path d="M10 9l5 3-5 3z" stroke="currentColor" stroke-width="1.5" /></svg>
+                Ocio
+            </button>
+            <button type="button" data-tag="Compras" class="flex items-center gap-1.5 rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-muted">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 8h14l-1.2 11H6.2z" stroke="currentColor" stroke-width="1.5" /><path d="M9 8V6.5a3 3 0 0 1 6 0V8" stroke="currentColor" stroke-width="1.5" /></svg>
+                Compras
+            </button>
+            <button type="button" data-tag="Salud" class="flex items-center gap-1.5 rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-muted">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.5" /></svg>
+                Salud
+            </button>
+            <button type="button" data-tag="Otro" class="flex items-center gap-1.5 rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-muted">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="12" r="1.4" fill="currentColor" /><circle cx="12" cy="12" r="1.4" fill="currentColor" /><circle cx="18" cy="12" r="1.4" fill="currentColor" /></svg>
+                Otro
+            </button>
+        </div>
+        <button type="button" data-next-from-category class="h-[52px] rounded-xl bg-paper text-[14px] font-semibold text-obsidian disabled:opacity-40" disabled>Continuar</button>
+    </section>
+
+    <!-- Paso 3: Cuenta -->
+    <section data-step="account" class="hidden flex-col gap-6">
+        <div class="flex items-baseline justify-between">
+            <span class="text-[15px] font-medium text-paper">&iquest;Desde d&oacute;nde?</span>
+            <span data-amount-neg-display class="font-mono text-[20px] font-medium text-harsh">-$0</span>
+        </div>
+        <div class="flex flex-col gap-2" data-accounts>
+            @foreach (var account in Model)
+            {
+                <button type="button" data-account-id="@account.Id" data-account="@account.Name" data-balance="@account.Balance" class="flex items-center gap-3.5 rounded-xl border border-ash px-4 py-3.5 text-left">
+                    <span class="flex h-[34px] w-[34px] items-center justify-center rounded-lg bg-ash text-[11px] font-semibold text-paper">@(account.Name.Length >= 2 ? account.Name.Substring(0, 2).ToUpper() : account.Name.ToUpper())</span>
+                    <span class="flex-1"><span class="block text-[14px] font-medium text-paper">@account.Name</span><span class="mt-0.5 block text-[11.5px] text-muted">@account.Subtitle</span></span>
+                    <span class="font-mono text-[14px] text-paper">@("$" + account.Balance.ToString("N0"))</span>
+                </button>
+            }
+        </div>
+        <button type="button" data-register class="h-[52px] rounded-xl bg-paper text-[14px] font-semibold text-obsidian disabled:opacity-40" disabled>Registrar gasto</button>
+    </section>
+
+    <!-- Paso 4: Confirmacion -->
+    <section data-step="confirm" class="hidden flex-col items-center gap-8 py-6 text-center">
+        <div class="flex h-[52px] w-[52px] items-center justify-center rounded-full border border-ash">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#1FB97A" stroke-width="1.8" /></svg>
+        </div>
+        <div>
+            <div data-amount-neg-full class="font-mono text-[46px] font-medium leading-none tracking-tight text-paper">-$0</div>
+            <div class="mt-4 text-[15px] text-muted">Tu realidad cambi&oacute;.</div>
+        </div>
+        <div class="w-full rounded-xl border border-ash bg-graphite">
+            <div class="flex items-center justify-between border-b border-ash px-5 py-4">
+                <span class="text-[12.5px] text-muted">Dinero disponible</span>
+                <span class="font-mono text-[13.5px] text-muted"><span data-summary-before>$0</span> <span class="text-ash-light">&rarr;</span> <span data-summary-after class="text-paper">$0</span></span>
+            </div>
+            <div class="flex items-center justify-between px-5 py-4">
+                <span class="text-[12.5px] text-muted"><span data-summary-account-name>Cuenta</span> despu&eacute;s</span>
+                <span data-summary-account-balance class="font-mono text-[13.5px] text-paper">$0</span>
+            </div>
+        </div>
+        <div id="gasto-error" class="hidden text-[12.5px] leading-relaxed text-harsh"></div>
+        <a href="/Dashboard" class="flex h-[52px] w-full items-center justify-center rounded-xl bg-paper text-[14px] font-semibold text-obsidian">Listo</a>
+        <button type="button" data-restart class="text-[12px] text-muted">Registrar otro</button>
+    </section>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/personal/gastos.js" defer></script>
+}

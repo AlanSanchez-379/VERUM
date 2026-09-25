@@ -1,0 +1,48 @@
+@using Verum.Application.DTOs.Personal
+@model List<CommitmentDto>
+@{
+    ViewData["Title"] = "Personal - Compromisos";
+    var total = Model.Sum(c => c.Amount);
+    var pending = Model.Where(c => !c.IsPaid).Sum(c => c.Amount);
+}
+
+<div class="flex flex-col gap-6 max-w-2xl">
+    <div>
+        <div class="text-[19px] font-medium text-paper tracking-tight">Compromisos del periodo</div>
+        <div class="text-[13px] text-muted mt-1">Lo que ya est&aacute; destinado, pagado o no</div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-px bg-graphite-2 border border-ash rounded-xl overflow-hidden">
+        <div class="bg-graphite p-6">
+            <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Total del periodo</div>
+            <div class="font-mono text-[30px] font-medium text-paper tracking-tight mt-3">@("$" + total.ToString("N0"))</div>
+        </div>
+        <div class="bg-graphite p-6">
+            <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Pendiente de pagar</div>
+            <div class="font-mono text-[30px] font-medium text-paper tracking-tight mt-3">@("$" + pending.ToString("N0"))</div>
+        </div>
+    </div>
+
+    <div class="flex flex-col gap-2">
+        @foreach (var commitment in Model)
+        {
+            <div class="flex items-center gap-3.5 rounded-xl border border-ash bg-graphite px-5 py-4">
+                <span class="flex h-[38px] w-[38px] items-center justify-center rounded-lg @(commitment.IsPaid ? "bg-ascend/15" : "bg-ash")">
+                    @if (commitment.IsPaid)
+                    {
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#1FB97A" stroke-width="1.8" /></svg>
+                    }
+                    else
+                    {
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="15" rx="2" stroke="#7C8794" stroke-width="1.5" /><path d="M4 10h16" stroke="#7C8794" stroke-width="1.5" /></svg>
+                    }
+                </span>
+                <span class="flex-1">
+                    <span class="block text-[14.5px] font-medium text-paper">@commitment.Name</span>
+                    <span class="mt-0.5 block text-[11.5px] text-muted">@(commitment.IsPaid ? "Pagado" : "Vence") &middot; @commitment.DueDate.ToString("d MMM")</span>
+                </span>
+                <span class="font-mono text-[15px] font-medium @(commitment.IsPaid ? "text-muted" : "text-paper")">@("$" + commitment.Amount.ToString("N0"))</span>
+            </div>
+        }
+    </div>
+</div>

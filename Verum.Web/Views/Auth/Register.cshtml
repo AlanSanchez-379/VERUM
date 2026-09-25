@@ -1,0 +1,40 @@
+@{
+    ViewData["Title"] = "Crear cuenta";
+    Layout = "_AuthLayout";
+}
+
+<div class="rounded-xl border border-ash bg-graphite p-6">
+    <h1 class="text-[17px] font-semibold text-paper pb-1">Crear cuenta</h1>
+    <p class="text-[13px] text-muted pb-6">Empezá a usar Verum.</p>
+
+    @if (ViewData["Error"] is string error)
+    {
+        <div class="mb-4 rounded-lg border border-harsh/40 bg-harsh/10 px-3 py-2.5 text-[12px] text-harsh">@error</div>
+    }
+    @if (ViewData["Info"] is string info)
+    {
+        <div class="mb-4 rounded-lg border border-ascend/40 bg-ascend/10 px-3 py-2.5 text-[12px] text-ascend">@info</div>
+    }
+
+    <form method="post" asp-action="Register" class="flex flex-col gap-3.5">
+        @Html.AntiForgeryToken()
+        <div>
+            <label class="block text-[11px] font-medium text-muted pb-1.5">Correo</label>
+            <input type="email" name="email" required autofocus
+                   class="w-full rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-paper outline-none focus:border-focus" />
+        </div>
+        <div>
+            <label class="block text-[11px] font-medium text-muted pb-1.5">Contraseña</label>
+            <input type="password" name="password" required minlength="6"
+                   class="w-full rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-paper outline-none focus:border-focus" />
+        </div>
+        <button type="submit"
+                class="mt-2 rounded-lg bg-paper text-obsidian text-[13px] font-medium py-2.5 hover:bg-paper/90">
+            Crear cuenta
+        </button>
+    </form>
+
+    <p class="pt-5 text-center text-[12px] text-muted">
+        ¿Ya tenés cuenta? <a href="/auth/login" class="text-paper hover:underline">Iniciá sesión</a>
+    </p>
+</div>

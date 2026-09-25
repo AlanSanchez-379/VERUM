@@ -1,0 +1,38 @@
+@using Verum.Application.DTOs.Personal
+@model List<GoalDto>
+@{
+    ViewData["Title"] = "Personal - Prioridades";
+}
+
+<div id="prioridades-app" class="flex flex-col gap-6 max-w-2xl" data-update-url="/personal/prioridades/actualizar">
+    <div>
+        <div class="text-[19px] font-medium text-paper tracking-tight">Prioridades</div>
+        <div class="text-[13px] text-muted mt-1">Qu&eacute; meta va primero cuando el margen no alcanza para todas</div>
+    </div>
+
+    <div class="flex flex-col gap-3" data-goal-list>
+        @foreach (var goal in Model)
+        {
+            <div class="flex items-center gap-4 rounded-xl border border-ash bg-graphite px-5 py-4" data-goal-row data-goal-id="@goal.Id">
+                <span class="flex-1">
+                    <span class="block text-[14.5px] font-medium text-paper">@goal.Name</span>
+                    <span class="mt-0.5 block text-[11.5px] text-muted">@(goal.PercentComplete)% completado</span>
+                </span>
+                <div class="flex gap-1.5" data-priority-toggle>
+                    @foreach (var p in new[] { "Baja", "Media", "Alta" })
+                    {
+                        var active = goal.Priority == p;
+                        var cls = active
+                            ? "bg-paper text-obsidian"
+                            : "bg-graphite-2 text-muted border border-ash";
+                        <button type="button" data-priority="@p" class="rounded-md px-2.5 py-1.5 text-[11px] font-medium @cls">@p</button>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/personal/prioridades.js" defer></script>
+}

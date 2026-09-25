@@ -1,0 +1,39 @@
+@model Verum.Web.Models.ViewModels.NegocioAlcanceViewModel
+@{
+    ViewData["Title"] = "Negocio - Alcance";
+}
+
+<div class="flex flex-col gap-6 max-w-2xl">
+    <div>
+        <div class="text-[19px] font-medium text-paper tracking-tight">Alcance &middot; @Model.Business.Name</div>
+        <div class="text-[13px] text-muted mt-1">Con la utilidad actual de @("$" + Model.Margin.ToString("N0")), &iquest;a qu&eacute; llegas?</div>
+    </div>
+
+    <div class="flex flex-col gap-4">
+        @if (Model.Reach.Count == 0)
+        {
+            <div class="text-[12.5px] text-muted py-3">Todav&iacute;a no ten&eacute;s metas para este negocio.</div>
+        }
+        @foreach (var item in Model.Reach)
+        {
+            var statusClasses = item.Status switch
+            {
+                "Dentro de alcance" => "text-ascend border-ascend/40",
+                "Cerca del límite" => "text-paper border-ash-light",
+                _ => "text-harsh border-harsh/40"
+            };
+            <div class="border border-ash rounded-xl bg-graphite p-6">
+                <div class="flex items-baseline justify-between">
+                    <span class="text-[16px] font-semibold text-paper">@item.Goal.Name</span>
+                    <span class="text-[10px] font-medium uppercase tracking-[0.08em] @statusClasses border rounded px-1.5 py-0.5">@item.Status</span>
+                </div>
+                <div class="font-mono text-[15px] text-paper mt-2.5">@("$" + item.Goal.CurrentAmount.ToString("N0")) <span class="text-muted">/ @("$" + item.Goal.TargetAmount.ToString("N0"))</span></div>
+                <div class="h-1 rounded-full bg-ash mt-4 overflow-hidden"><div class="h-full bg-paper" style="width:@(item.Goal.PercentComplete)%"></div></div>
+                <div class="mt-4 flex flex-col gap-1.5 text-[12.5px] text-muted">
+                    <div class="flex justify-between"><span>Necesitas destinar</span><span class="font-mono text-paper">@("$" + item.RequiredPerMonth.ToString("N0")) / mes</span></div>
+                    <div class="flex justify-between"><span>Tiempo restante</span><span class="font-mono text-paper">@item.MonthsRemaining meses</span></div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

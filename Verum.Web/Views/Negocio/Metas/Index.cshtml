@@ -1,0 +1,81 @@
+@using Verum.Application.DTOs.Negocio
+@model List<BusinessGoalDto>
+@{
+    ViewData["Title"] = "Negocio - Metas";
+}
+
+<div id="metas-app" data-register-url="/negocio/metas/registrar" class="flex flex-col gap-6 max-w-2xl">
+    <div>
+        <div class="text-[19px] font-medium text-paper tracking-tight">Metas &middot; @ViewData["BusinessName"]</div>
+        <div class="text-[13px] text-muted mt-1">Hacia d&oacute;nde va el dinero de este negocio</div>
+    </div>
+
+    <div class="border border-ash rounded-xl bg-graphite p-6">
+        <div class="text-[13px] font-medium text-paper pb-4">Nueva meta</div>
+        <div id="metas-error" class="hidden mb-3 rounded-lg border border-harsh/40 bg-harsh/10 px-3 py-2.5 text-[12px] text-harsh"></div>
+        <div class="flex flex-col gap-3.5">
+            <div>
+                <label class="block text-[11px] font-medium text-muted pb-1.5">Nombre</label>
+                <input type="text" id="metas-name" placeholder="Ej: Nueva m&aacute;quina de caf&eacute;"
+                       class="w-full rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-paper outline-none focus:border-focus" />
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[11px] font-medium text-muted pb-1.5">Monto objetivo</label>
+                    <input type="number" id="metas-target" min="0" step="0.01"
+                           class="w-full rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-paper outline-none focus:border-focus" />
+                </div>
+                <div>
+                    <label class="block text-[11px] font-medium text-muted pb-1.5">Fecha objetivo</label>
+                    <input type="date" id="metas-date"
+                           class="w-full rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-paper outline-none focus:border-focus" />
+                </div>
+            </div>
+            <button type="button" id="metas-submit" class="mt-2 rounded-lg bg-paper text-obsidian text-[13px] font-medium py-2.5 hover:bg-paper/90">
+                Crear meta
+            </button>
+        </div>
+    </div>
+
+    <div class="flex flex-col gap-4">
+        @if (Model.Count == 0)
+        {
+            <div class="text-[12.5px] text-muted py-3">Todav&iacute;a no ten&eacute;s metas para este negocio.</div>
+        }
+        @foreach (var goal in Model)
+        {
+            var priorityClasses = goal.Priority == "Alta"
+                ? "text-focus border-focus/40"
+                : goal.Priority == "Media"
+                    ? "text-muted border-ash-light"
+                    : "text-muted border-ash";
+            <div class="border border-ash rounded-xl bg-graphite p-6" data-goal-card data-id="@goal.Id">
+                <div class="flex items-baseline justify-between">
+                    <span class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Meta</span>
+                    <span class="text-[10px] font-medium uppercase tracking-[0.08em] @priorityClasses border rounded px-1.5 py-0.5">@goal.Priority</span>
+                </div>
+                <div class="flex items-baseline justify-between mt-4">
+                    <span class="text-[19px] font-semibold text-paper">@goal.Name</span>
+                    <span class="font-mono text-[13px] text-muted">@(goal.PercentComplete)%</span>
+                </div>
+                <div class="font-mono text-[15px] text-paper mt-2.5">@("$" + goal.CurrentAmount.ToString("N0")) <span class="text-muted">/ @("$" + goal.TargetAmount.ToString("N0"))</span></div>
+                <div class="h-1 rounded-full bg-ash mt-4 overflow-hidden"><div class="h-full bg-paper" style="width:@(goal.PercentComplete)%"></div></div>
+                <div class="flex items-center justify-between mt-3.5">
+                    <span class="text-[12px] text-muted">Faltan @("$" + goal.Remaining.ToString("N0"))</span>
+                    <span class="text-[12px] text-muted">@goal.TargetDate.ToString("d MMM yyyy")</span>
+                </div>
+                <div class="flex items-center gap-2 mt-4">
+                    <input type="number" min="0" step="0.01" data-contribute-amount placeholder="Monto a aportar"
+                           class="flex-1 rounded-lg border border-ash bg-graphite-2 px-3 py-2 text-[12.5px] text-paper outline-none focus:border-focus" />
+                    <button type="button" data-contribute-submit class="rounded-lg border border-ash px-3.5 py-2 text-[12px] font-medium text-paper hover:bg-graphite-2">
+                        Aportar
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/negocio/metas.js" defer></script>
+}

@@ -1,0 +1,57 @@
+@model List<Verum.Application.DTOs.Negocio.BusinessDto>
+@{
+    ViewData["Title"] = "Mis negocios";
+}
+
+<div class="flex flex-col gap-6 md:gap-8 max-w-2xl">
+    <div>
+        <div class="text-[19px] md:text-[21px] font-medium text-paper tracking-tight">Mis negocios</div>
+        <div class="text-[13px] text-muted mt-1">Elegí un negocio para ver su realidad, o creá uno nuevo.</div>
+    </div>
+
+    @if (Model.Count > 0)
+    {
+        <div class="flex flex-col gap-2.5">
+            @foreach (var business in Model)
+            {
+                <form method="post" action="/negocio/seleccionar">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="businessId" value="@business.Id" />
+                    <button type="submit" class="w-full flex items-center justify-between rounded-xl border border-ash bg-graphite px-5 py-4 text-left hover:border-ash-light">
+                        <div>
+                            <div class="text-[14px] font-medium text-paper">@business.Name</div>
+                            <div class="text-[12px] text-muted mt-0.5">@business.Industry</div>
+                        </div>
+                        <span class="text-[12px] text-focus">Entrar &rarr;</span>
+                    </button>
+                </form>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="rounded-xl border border-dashed border-ash-light p-6 text-[13px] text-muted">
+            Todavía no tenés negocios registrados. Creá el primero abajo.
+        </div>
+    }
+
+    <div class="rounded-xl border border-ash bg-graphite p-6">
+        <div class="text-[13px] font-medium text-paper pb-4">Crear nuevo negocio</div>
+        <form method="post" action="/negocio/crear" class="flex flex-col gap-3.5">
+            @Html.AntiForgeryToken()
+            <div>
+                <label class="block text-[11px] font-medium text-muted pb-1.5">Nombre del negocio</label>
+                <input type="text" name="name" required
+                       class="w-full rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-paper outline-none focus:border-focus" />
+            </div>
+            <div>
+                <label class="block text-[11px] font-medium text-muted pb-1.5">Rubro</label>
+                <input type="text" name="industry" placeholder="Ej: Comercio, Servicios, Gastronomía"
+                       class="w-full rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-paper outline-none focus:border-focus" />
+            </div>
+            <button type="submit" class="mt-2 rounded-lg bg-paper text-obsidian text-[13px] font-medium py-2.5 hover:bg-paper/90">
+                Crear negocio
+            </button>
+        </form>
+    </div>
+</div>

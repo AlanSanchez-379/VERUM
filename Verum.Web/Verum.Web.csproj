@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Verum.Application\Verum.Application.csproj" />
+    <ProjectReference Include="..\Verum.Infrastructure\Verum.Infrastructure.csproj" />
+    <ProjectReference Include="..\Verum.Shared\Verum.Shared.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>

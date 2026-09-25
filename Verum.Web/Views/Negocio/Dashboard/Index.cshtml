@@ -1,0 +1,91 @@
+@model Verum.Web.Models.ViewModels.NegocioDashboardViewModel
+@{
+    ViewData["Title"] = "Negocio - Dashboard";
+}
+
+<div class="flex flex-col gap-6 md:gap-8">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+            <div class="text-[19px] md:text-[21px] font-medium text-paper tracking-tight">@Model.Business.Name</div>
+            <div class="text-[13px] text-muted mt-1">@Model.Business.Industry &middot; creado el @Model.Business.CreatedAt.ToString("d MMMM yyyy")</div>
+        </div>
+        <div class="flex items-center gap-2.5 self-start">
+            <a href="/negocio/simulacion" class="rounded-lg border border-ash px-3.5 py-2.5 text-[12.5px] font-medium text-paper">
+                &iquest;Qu&eacute; pasa si...?
+            </a>
+            <a href="/negocio" class="rounded-lg border border-ash px-3.5 py-2.5 text-[12.5px] font-medium text-paper">
+                Cambiar de negocio
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-graphite-2 border border-ash rounded-xl overflow-hidden">
+        <div class="bg-graphite p-6 md:p-7">
+            <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Ventas totales</div>
+            <div class="font-mono text-[32px] font-medium text-paper tracking-tight mt-3">@("$" + Model.TotalSales.ToString("N0"))</div>
+        </div>
+        <div class="bg-graphite p-6 md:p-6">
+            <div class="text-[11.5px] text-muted">Gastos totales</div>
+            <div class="font-mono text-[26px] font-medium text-paper mt-3">@("$" + Model.TotalExpenses.ToString("N0"))</div>
+        </div>
+        <div class="p-6 md:p-6" style="background:@(Model.Utility >= 0 ? "#0D1014" : "rgba(229,72,77,.06)")">
+            <div class="text-[11.5px] @(Model.Utility >= 0 ? "text-ascend" : "text-harsh")">Utilidad</div>
+            <div class="font-mono text-[26px] font-medium @(Model.Utility >= 0 ? "text-ascend" : "text-harsh") mt-3">@("$" + Model.Utility.ToString("N0"))</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="border border-ash rounded-xl bg-graphite p-6">
+            <div class="flex items-baseline justify-between">
+                <span class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Ventas recientes</span>
+                <a href="/negocio/ventas" class="text-[11.5px] text-focus">Registrar</a>
+            </div>
+            <div class="flex flex-col mt-2.5">
+                @if (Model.RecentSales.Count == 0)
+                {
+                    <div class="py-3.5 text-[12.5px] text-muted">A&uacute;n no registraste ninguna venta.</div>
+                }
+                @for (var i = 0; i < Model.RecentSales.Count; i++)
+                {
+                    var sale = Model.RecentSales[i];
+                    var borderClass = i < Model.RecentSales.Count - 1 ? "border-b border-graphite-2" : "";
+                    <div class="flex items-center gap-3 py-3.5 @borderClass">
+                        <span class="h-1.5 w-1.5 rounded-full bg-ascend"></span>
+                        <span class="flex-1 text-[12.5px] text-paper">@sale.Description</span>
+                        <span class="font-mono text-[12.5px] font-medium text-ascend">+@("$" + sale.Amount.ToString("N0"))</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="border border-ash rounded-xl bg-graphite p-6">
+            <div class="flex items-baseline justify-between">
+                <span class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Gastos recientes</span>
+                <a href="/negocio/gastos" class="text-[11.5px] text-focus">Registrar</a>
+            </div>
+            <div class="flex flex-col mt-2.5">
+                @if (Model.RecentExpenses.Count == 0)
+                {
+                    <div class="py-3.5 text-[12.5px] text-muted">A&uacute;n no registraste ning&uacute;n gasto.</div>
+                }
+                @for (var i = 0; i < Model.RecentExpenses.Count; i++)
+                {
+                    var expense = Model.RecentExpenses[i];
+                    var borderClass = i < Model.RecentExpenses.Count - 1 ? "border-b border-graphite-2" : "";
+                    <div class="flex items-center gap-3 py-3.5 @borderClass">
+                        <span class="h-1.5 w-1.5 rounded-full bg-harsh"></span>
+                        <span class="flex-1 text-[12.5px] text-paper">@expense.Category</span>
+                        <span class="font-mono text-[12.5px] font-medium text-harsh">-@("$" + expense.Amount.ToString("N0"))</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="border border-dashed border-ash-light rounded-xl p-6" style="background:rgba(46,107,255,.04)">
+        <div class="text-[10px] font-medium uppercase tracking-[0.16em] text-focus">En construcci&oacute;n</div>
+        <div class="text-[14.5px] leading-relaxed text-paper mt-3">
+            Las cuentas bancarias propias del negocio todav&iacute;a no est&aacute;n implementadas: Ventas y Gastos no se asocian a una cuenta espec&iacute;fica todav&iacute;a.
+        </div>
+    </div>
+</div>

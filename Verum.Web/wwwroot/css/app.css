@@ -1,0 +1,8 @@
+/* Estilos propios que no cubre Tailwind. */
+
+/* Evita que montos muy grandes (o errores de tipeo con muchos ceros) desborden
+   el layout en mobile: los numeros en fuente monoespaciada pueden cortarse
+   en cualquier punto en vez de romper el ancho del contenedor. */
+.font-mono {
+  overflow-wrap: anywhere;
+}
