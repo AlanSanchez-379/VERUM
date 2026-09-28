@@ -8,10 +8,14 @@ namespace Verum.Application.Services;
 public class CollectionService : ICollectionService
 {
     private readonly IReceivableRepository _receivableRepository;
+    private readonly ISaleService _saleService;
+    private readonly IBusinessAccountService _accountService;
 
-    public CollectionService(IReceivableRepository receivableRepository)
+    public CollectionService(IReceivableRepository receivableRepository, ISaleService saleService, IBusinessAccountService accountService)
     {
         _receivableRepository = receivableRepository;
+        _saleService = saleService;
+        _accountService = accountService;
     }
 
     public async Task<List<ReceivableDto>> GetAllAsync(Guid businessId)
@@ -37,7 +41,23 @@ public class CollectionService : ICollectionService
         });
     }
 
-    public Task MarkCollectedAsync(Guid businessId, Guid id) => _receivableRepository.MarkCollectedAsync(businessId, id);
+    public async Task MarkCollectedAsync(Guid businessId, Guid id)
+    {
+        var receivables = await _receivableRepository.GetAllAsync(businessId);
+        var receivable = receivables.FirstOrDefault(r => r.Id == id);
+        if (receivable is null || receivable.IsCollected)
+        {
+            // ya cobrado o no existe: no volver a sumar el dinero.
+            return;
+        }
+
+        await _receivableRepository.MarkCollectedAsync(businessId, id);
+
+        // El cobro es plata real que entra recien ahora: se refleja como venta,
+        // no en el momento en que se registro la cuenta por cobrar.
+        var accountId = await _accountService.GetOrCreateDefaultAccountIdAsync(businessId);
+        await _saleService.RegisterSaleAsync(businessId, accountId, $"Cobro: {receivable.ClientName}", receivable.Amount);
+    }
 
     private static ReceivableDto ToDto(Receivable r) => new(r.Id, r.BusinessId, r.ClientName, r.Amount, r.DueDate, r.IsCollected);
 }

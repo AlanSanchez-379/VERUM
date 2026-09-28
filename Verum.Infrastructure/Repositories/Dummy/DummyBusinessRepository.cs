@@ -34,4 +34,17 @@ public class DummyBusinessRepository : IBusinessRepository
             return Task.FromResult(business);
         }
     }
+
+    public Task RenameAsync(Guid id, string name)
+    {
+        lock (Lock)
+        {
+            var business = Businesses.FirstOrDefault(b => b.Id == id);
+            if (business is not null)
+            {
+                business.Name = name;
+            }
+        }
+        return Task.CompletedTask;
+    }
 }

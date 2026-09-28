@@ -9,6 +9,7 @@
   submitBtn.addEventListener("click", async () => {
     const category = document.getElementById("gastos-category").value.trim();
     const amount = parseFloat(document.getElementById("gastos-amount").value);
+    const accountId = document.getElementById("gastos-account").value;
 
     errorBox.classList.add("hidden");
 
@@ -24,7 +25,7 @@
       const res = await fetch(registerUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ category, amount }),
+        body: JSON.stringify({ category, amount, accountId }),
       });
 
       const data = await res.json();

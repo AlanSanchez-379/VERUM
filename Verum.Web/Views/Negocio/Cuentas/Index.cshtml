@@ -1,17 +1,56 @@
+@model Verum.Web.Models.ViewModels.NegocioCuentasViewModel
 @{
     ViewData["Title"] = "Negocio - Cuentas";
 }
 
-<div class="flex flex-col gap-6 max-w-2xl">
+<div id="negocio-cuentas-app" class="flex flex-col gap-6 max-w-2xl">
     <div>
-        <div class="text-[19px] font-medium text-paper tracking-tight">Cuentas del negocio</div>
-        <div class="text-[13px] text-muted mt-1">Bancos y billeteras propias de este negocio</div>
+        <div class="text-[19px] font-medium text-paper tracking-tight">Cuentas &middot; @Model.Business.Name</div>
+        <div class="text-[13px] text-muted mt-1">D&oacute;nde vive de verdad la plata de este negocio</div>
     </div>
 
-    <div class="border border-dashed border-ash-light rounded-xl p-6" style="background:rgba(46,107,255,.04)">
-        <div class="text-[10px] font-medium uppercase tracking-[0.16em] text-focus">En construcción</div>
-        <div class="text-[14.5px] leading-relaxed text-paper mt-3">
-            Todavía no existen cuentas propias del negocio: Ventas y Gastos no se asocian a una cuenta específica.
+    <div class="border border-ash rounded-xl bg-graphite p-6">
+        <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Total en cuentas</div>
+        <div class="font-mono text-[40px] font-medium text-paper tracking-tight mt-3">@("$" + Model.TotalAvailable.ToString("N0"))</div>
+    </div>
+
+    <div class="flex flex-col gap-2">
+        @foreach (var account in Model.Accounts)
+        {
+            <div class="flex items-center gap-3.5 rounded-xl border border-ash bg-graphite px-5 py-4">
+                <span class="flex h-[38px] w-[38px] items-center justify-center rounded-lg bg-ash text-[11px] font-semibold text-paper">
+                    @(account.Name.Length >= 2 ? account.Name.Substring(0, 2).ToUpper() : account.Name.ToUpper())
+                </span>
+                <span class="flex-1">
+                    <span class="block text-[14.5px] font-medium text-paper">@account.Name</span>
+                    <span class="mt-0.5 block text-[11.5px] text-muted">@account.Subtitle</span>
+                </span>
+                <span class="font-mono text-[15px] font-medium text-paper">@("$" + account.Balance.ToString("N0"))</span>
+            </div>
+        }
+    </div>
+
+    <div class="border border-ash rounded-xl bg-graphite p-6">
+        <div class="text-[13px] font-medium text-paper pb-4">Nueva cuenta</div>
+        <div id="cuenta-error" class="hidden mb-3 rounded-lg border border-harsh/40 bg-harsh/10 px-3 py-2.5 text-[12px] text-harsh"></div>
+        <div class="flex flex-col gap-3.5">
+            <div>
+                <label class="block text-[11px] font-medium text-muted pb-1.5">Nombre</label>
+                <input type="text" id="cuenta-name" placeholder="Ej: Banco, Efectivo, Mercado Pago"
+                       class="w-full rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-paper outline-none focus:border-focus" />
+            </div>
+            <div>
+                <label class="block text-[11px] font-medium text-muted pb-1.5">Detalle (opcional)</label>
+                <input type="text" id="cuenta-subtitle" placeholder="Ej: Cuenta corriente"
+                       class="w-full rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-paper outline-none focus:border-focus" />
+            </div>
+            <button type="button" id="cuenta-submit" class="mt-2 rounded-lg bg-paper text-obsidian text-[13px] font-medium py-2.5 hover:bg-paper/90">
+                Crear cuenta
+            </button>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/negocio/cuentas.js" defer></script>
+}

@@ -12,6 +12,7 @@ public class DashboardController : Controller
     private readonly IExpenseService _expenseService;
     private readonly IGoalService _goalService;
     private readonly ICreditAccountService _creditAccountService;
+    private readonly IRecurringIncomeService _recurringIncomeService;
 
     public DashboardController(
         IAccountService accountService,
@@ -19,7 +20,8 @@ public class DashboardController : Controller
         ICommitmentService commitmentService,
         IExpenseService expenseService,
         IGoalService goalService,
-        ICreditAccountService creditAccountService)
+        ICreditAccountService creditAccountService,
+        IRecurringIncomeService recurringIncomeService)
     {
         _accountService = accountService;
         _incomeService = incomeService;
@@ -27,6 +29,7 @@ public class DashboardController : Controller
         _expenseService = expenseService;
         _goalService = goalService;
         _creditAccountService = creditAccountService;
+        _recurringIncomeService = recurringIncomeService;
     }
 
     public async Task<IActionResult> Index()
@@ -38,6 +41,7 @@ public class DashboardController : Controller
         var totalExpenses = await _expenseService.GetTotalAsync();
         var priorityGoal = await _goalService.GetPriorityGoalAsync();
         var creditAccounts = await _creditAccountService.GetAllAsync();
+        var pendingConfirmations = await _recurringIncomeService.GetPendingConfirmationsAsync();
 
         var vm = new DashboardViewModel
         {
@@ -57,7 +61,8 @@ public class DashboardController : Controller
 
             PriorityGoal = priorityGoal,
 
-            CreditAvailable = creditAccounts.Sum(c => c.Available)
+            CreditAvailable = creditAccounts.Sum(c => c.Available),
+            PendingIncomeConfirmations = pendingConfirmations
         };
 
         return View(vm);

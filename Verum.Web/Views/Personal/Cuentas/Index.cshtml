@@ -1,34 +1,104 @@
-@using Verum.Application.DTOs.Personal
-@model List<AccountDto>
+@model Verum.Web.Models.ViewModels.CuentasViewModel
 @{
     ViewData["Title"] = "Personal - Cuentas";
-    var total = Model.Sum(a => a.Balance);
 }
 
-<div class="flex flex-col gap-6 max-w-2xl">
+<div class="flex flex-col gap-8 max-w-2xl">
     <div>
         <div class="text-[19px] font-medium text-paper tracking-tight">Tus cuentas</div>
-        <div class="text-[13px] text-muted mt-1">Dinero real disponible &middot; sin contar cr&eacute;dito</div>
+        <div class="text-[13px] text-muted mt-1">Tu dinero real, y aparte lo que tenés prestado</div>
     </div>
 
-    <div class="border border-ash rounded-xl bg-graphite p-6">
-        <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Total en cuentas</div>
-        <div class="font-mono text-[40px] font-medium text-paper tracking-tight mt-3">@("$" + total.ToString("N0"))</div>
+    <!-- Dinero real -->
+    <div class="flex flex-col gap-4">
+        <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Esto es lo que tenés en realidad</div>
+
+        <div class="border border-ash rounded-xl bg-graphite p-6">
+            <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Total en cuentas</div>
+            <div class="font-mono text-[40px] font-medium text-paper tracking-tight mt-3">@("$" + Model.TotalAvailable.ToString("N0"))</div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+            @foreach (var account in Model.Accounts)
+            {
+                <div class="flex items-center gap-3.5 rounded-xl border border-ash bg-graphite px-5 py-4">
+                    <span class="flex h-[38px] w-[38px] items-center justify-center rounded-lg bg-ash text-[11px] font-semibold text-paper">
+                        @(account.Name.Length >= 2 ? account.Name.Substring(0, 2).ToUpper() : account.Name.ToUpper())
+                    </span>
+                    <span class="flex-1">
+                        <span class="block text-[14.5px] font-medium text-paper">@account.Name</span>
+                        <span class="mt-0.5 block text-[11.5px] text-muted">@account.Subtitle</span>
+                    </span>
+                    <span class="font-mono text-[15px] font-medium text-paper">@("$" + account.Balance.ToString("N0"))</span>
+                </div>
+            }
+        </div>
     </div>
 
-    <div class="flex flex-col gap-2">
-        @foreach (var account in Model)
-        {
-            <div class="flex items-center gap-3.5 rounded-xl border border-ash bg-graphite px-5 py-4">
-                <span class="flex h-[38px] w-[38px] items-center justify-center rounded-lg bg-ash text-[11px] font-semibold text-paper">
-                    @(account.Name.Length >= 2 ? account.Name.Substring(0, 2).ToUpper() : account.Name.ToUpper())
-                </span>
-                <span class="flex-1">
-                    <span class="block text-[14.5px] font-medium text-paper">@account.Name</span>
-                    <span class="mt-0.5 block text-[11.5px] text-muted">@account.Subtitle</span>
-                </span>
-                <span class="font-mono text-[15px] font-medium text-paper">@("$" + account.Balance.ToString("N0"))</span>
+    <div class="border-t border-dashed border-ash-light"></div>
+
+    <!-- Credito y deudas -->
+    <div class="flex flex-col gap-4">
+        <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Esto es lo que tenés prestado &middot; no es tu dinero</div>
+
+        <div class="grid grid-cols-2 gap-px bg-graphite-2 border border-ash rounded-xl overflow-hidden">
+            <div class="bg-graphite p-6">
+                <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Cr&eacute;dito disponible</div>
+                <div class="font-mono text-[26px] font-medium text-paper tracking-tight mt-3">@("$" + Model.TotalCreditAvailable.ToString("N0"))</div>
             </div>
+            <div class="bg-graphite p-6">
+                <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Deuda pendiente</div>
+                <div class="font-mono text-[26px] font-medium text-paper tracking-tight mt-3">@("$" + Model.TotalDebtRemaining.ToString("N0"))</div>
+            </div>
+        </div>
+
+        @if (Model.CreditAccounts.Count > 0)
+        {
+            <div class="text-[11px] font-medium uppercase tracking-[0.12em] text-muted mt-2">Tarjetas de cr&eacute;dito</div>
+            <div class="flex flex-col gap-3">
+                @foreach (var account in Model.CreditAccounts)
+                {
+                    <div class="border border-ash rounded-xl bg-graphite p-5">
+                        <div class="flex items-baseline justify-between">
+                            <span class="text-[14.5px] font-semibold text-paper">@account.Name</span>
+                            <span class="font-mono text-[12px] text-muted">@(account.PercentUsed)% usado</span>
+                        </div>
+                        <div class="font-mono text-[14px] text-paper mt-2">@("$" + account.UsedAmount.ToString("N0")) <span class="text-muted">de @("$" + account.CreditLimit.ToString("N0"))</span></div>
+                        <div class="h-1 rounded-full bg-ash mt-3 overflow-hidden"><div class="h-full bg-paper" style="width:@(account.PercentUsed)%"></div></div>
+                        <div class="flex items-center justify-between mt-3 text-[11.5px] text-muted">
+                            <span>Corte @account.CutoffDate.ToString("d MMM")</span>
+                            <span>Pago @account.DueDate.ToString("d MMM")</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        @if (Model.Debts.Count > 0)
+        {
+            <div class="text-[11px] font-medium uppercase tracking-[0.12em] text-muted mt-2">Deudas</div>
+            <div class="flex flex-col gap-3">
+                @foreach (var debt in Model.Debts)
+                {
+                    <div class="border border-ash rounded-xl bg-graphite p-5">
+                        <div class="flex items-baseline justify-between">
+                            <span class="text-[14.5px] font-semibold text-paper">@debt.Name</span>
+                            <span class="font-mono text-[12px] text-muted">@(debt.PercentPaid)% pagado</span>
+                        </div>
+                        <div class="font-mono text-[14px] text-paper mt-2">@("$" + debt.RemainingAmount.ToString("N0")) <span class="text-muted">restante de @("$" + debt.TotalAmount.ToString("N0"))</span></div>
+                        <div class="h-1 rounded-full bg-ash mt-3 overflow-hidden"><div class="h-full bg-paper" style="width:@(debt.PercentPaid)%"></div></div>
+                        <div class="flex items-center justify-between mt-3 text-[11.5px] text-muted">
+                            <span>Cuota @("$" + debt.MonthlyPayment.ToString("N0")) / mes</span>
+                            <span>Pr&oacute;ximo pago @debt.NextDueDate.ToString("d MMM")</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        @if (Model.CreditAccounts.Count == 0 && Model.Debts.Count == 0)
+        {
+            <div class="border border-dashed border-ash rounded-xl p-6 text-[13px] text-muted">No ten&eacute;s cr&eacute;dito ni deudas registradas. Buena se&ntilde;al.</div>
         }
     </div>
 </div>

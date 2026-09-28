@@ -8,11 +8,17 @@ namespace Verum.Web.Controllers.Negocio;
 public class GastosController : NegocioBaseController
 {
     private readonly IBusinessExpenseService _expenseService;
+    private readonly IBusinessAccountService _accountService;
 
-    public GastosController(IBusinessService businessService, ICurrentBusinessService currentBusiness, IBusinessExpenseService expenseService)
+    public GastosController(
+        IBusinessService businessService,
+        ICurrentBusinessService currentBusiness,
+        IBusinessExpenseService expenseService,
+        IBusinessAccountService accountService)
         : base(businessService, currentBusiness)
     {
         _expenseService = expenseService;
+        _accountService = accountService;
     }
 
     public async Task<IActionResult> Index()
@@ -23,11 +29,11 @@ public class GastosController : NegocioBaseController
             return Redirect("/negocio");
         }
 
-        var expenses = await _expenseService.GetAllAsync(business.Id);
         var vm = new NegocioExpensesViewModel
         {
             Business = business,
-            Expenses = expenses
+            Expenses = await _expenseService.GetAllAsync(business.Id),
+            Accounts = await _accountService.GetAllAsync(business.Id)
         };
 
         return View(vm);
@@ -35,6 +41,7 @@ public class GastosController : NegocioBaseController
 
     public class RegisterExpenseRequest
     {
+        public Guid AccountId { get; set; }
         public string Category { get; set; } = string.Empty;
         public decimal Amount { get; set; }
     }
@@ -58,7 +65,12 @@ public class GastosController : NegocioBaseController
             return BadRequest(new { error = "El monto debe ser mayor a cero." });
         }
 
-        await _expenseService.RegisterExpenseAsync(business.Id, request.Category.Trim(), request.Amount);
+        if (request.AccountId == Guid.Empty)
+        {
+            return BadRequest(new { error = "Elegí de qué cuenta sale el gasto." });
+        }
+
+        await _expenseService.RegisterExpenseAsync(business.Id, request.AccountId, request.Category.Trim(), request.Amount);
         var total = await _expenseService.GetTotalAsync(business.Id);
         return Ok(new { total });
     }

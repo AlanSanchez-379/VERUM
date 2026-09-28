@@ -1,4 +1,4 @@
-@model Verum.Web.Models.ViewModels.SimulacionViewModel
+﻿@model Verum.Web.Models.ViewModels.SimulacionViewModel
 @{
     ViewData["Title"] = "Personal - Simulación";
     var goal = Model.Goal;
@@ -84,7 +84,7 @@
                 </div>
                 <div class="relative mt-4.5 h-[3px] bg-ash">
                     <div class="h-full bg-paper" style="width:@(goalPct)%"></div>
-                    <div data-impact-bar class="absolute top-0 h-full" style="left:@(goalPct)%;width:0%;background:repeating-linear-gradient(90deg,#2E6BFF 0 3px,transparent 3px 6px)"></div>
+                    <div data-impact-bar class="absolute top-0 h-full" style="left:@(goalPct)%;width:0%;background:repeating-linear-gradient(90deg,#4D8DFF 0 3px,transparent 3px 6px)"></div>
                 </div>
                 <div class="mt-3 flex justify-between text-[11.5px]">
                     <span class="text-muted">Fecha estimada</span>

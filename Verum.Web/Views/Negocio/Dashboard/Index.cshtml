@@ -19,10 +19,15 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-graphite-2 border border-ash rounded-xl overflow-hidden">
+    <div class="grid grid-cols-1 md:grid-cols-[1.15fr_1fr_1fr_1fr] gap-px bg-graphite-2 border border-ash rounded-xl overflow-hidden">
         <div class="bg-graphite p-6 md:p-7">
-            <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Ventas totales</div>
-            <div class="font-mono text-[32px] font-medium text-paper tracking-tight mt-3">@("$" + Model.TotalSales.ToString("N0"))</div>
+            <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Dinero disponible</div>
+            <div class="font-mono text-[36px] md:text-[38px] leading-none font-medium text-paper tracking-tight mt-3">@("$" + Model.TotalAvailable.ToString("N0"))</div>
+            <div class="text-[12px] text-muted mt-3.5"><a href="/negocio/cuentas" class="text-focus">Ver cuentas &rarr;</a></div>
+        </div>
+        <div class="bg-graphite p-6 md:p-6">
+            <div class="text-[11.5px] text-muted">Ventas totales</div>
+            <div class="font-mono text-[26px] font-medium text-paper mt-3">@("$" + Model.TotalSales.ToString("N0"))</div>
         </div>
         <div class="bg-graphite p-6 md:p-6">
             <div class="text-[11.5px] text-muted">Gastos totales</div>
@@ -82,10 +87,4 @@
         </div>
     </div>
 
-    <div class="border border-dashed border-ash-light rounded-xl p-6" style="background:rgba(46,107,255,.04)">
-        <div class="text-[10px] font-medium uppercase tracking-[0.16em] text-focus">En construcci&oacute;n</div>
-        <div class="text-[14.5px] leading-relaxed text-paper mt-3">
-            Las cuentas bancarias propias del negocio todav&iacute;a no est&aacute;n implementadas: Ventas y Gastos no se asocian a una cuenta espec&iacute;fica todav&iacute;a.
-        </div>
-    </div>
 </div>

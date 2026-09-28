@@ -44,6 +44,7 @@ public class SupabaseSaleRepository : ISaleRepository
         {
             UserId = _currentUser.UserId,
             BusinessId = sale.BusinessId,
+            AccountId = sale.AccountId,
             Description = sale.Description,
             Amount = sale.Amount,
             Date = sale.Date
@@ -57,6 +58,7 @@ public class SupabaseSaleRepository : ISaleRepository
     {
         Id = row.Id,
         BusinessId = row.BusinessId,
+        AccountId = row.AccountId,
         Description = row.Description,
         Amount = row.Amount,
         Date = row.Date

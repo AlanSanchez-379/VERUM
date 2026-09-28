@@ -44,6 +44,7 @@ public class SupabaseBusinessExpenseRepository : IBusinessExpenseRepository
         {
             UserId = _currentUser.UserId,
             BusinessId = expense.BusinessId,
+            AccountId = expense.AccountId,
             Category = expense.Category,
             Amount = expense.Amount,
             Date = expense.Date
@@ -57,6 +58,7 @@ public class SupabaseBusinessExpenseRepository : IBusinessExpenseRepository
     {
         Id = row.Id,
         BusinessId = row.BusinessId,
+        AccountId = row.AccountId,
         Category = row.Category,
         Amount = row.Amount,
         Date = row.Date

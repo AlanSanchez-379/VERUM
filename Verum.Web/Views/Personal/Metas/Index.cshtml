@@ -10,7 +10,7 @@
         <div class="text-[13px] text-muted mt-1">Hacia d&oacute;nde va tu dinero</div>
     </div>
 
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4" id="goals-list">
         @foreach (var goal in Model)
         {
             var priorityClasses = goal.Priority == "Alta"
@@ -18,22 +18,56 @@
                 : goal.Priority == "Media"
                     ? "text-muted border-ash-light"
                     : "text-muted border-ash";
-            <div class="border border-ash rounded-xl bg-graphite p-6">
-                <div class="flex items-baseline justify-between">
-                    <span class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Meta</span>
-                    <span class="text-[10px] font-medium uppercase tracking-[0.08em] @priorityClasses border rounded px-1.5 py-0.5">@goal.Priority</span>
-                </div>
-                <div class="flex items-baseline justify-between mt-4">
-                    <span class="text-[19px] font-semibold text-paper">@goal.Name</span>
-                    <span class="font-mono text-[13px] text-muted">@(goal.PercentComplete)%</span>
-                </div>
-                <div class="font-mono text-[15px] text-paper mt-2.5">@("$" + goal.CurrentAmount.ToString("N0")) <span class="text-muted">/ @("$" + goal.TargetAmount.ToString("N0"))</span></div>
-                <div class="h-1 rounded-full bg-ash mt-4 overflow-hidden"><div class="h-full bg-paper" style="width:@(goal.PercentComplete)%"></div></div>
-                <div class="flex items-center justify-between mt-3.5">
-                    <span class="text-[12px] text-muted">Faltan @("$" + goal.Remaining.ToString("N0"))</span>
-                    <span class="text-[12px] text-muted">@goal.TargetDate.ToString("d MMM yyyy")</span>
+            <div class="goal-card border border-ash rounded-xl bg-graphite overflow-hidden" data-goal-id="@goal.Id">
+                <button type="button" class="goal-toggle w-full text-left p-6" data-goal-toggle>
+                    <div class="flex items-baseline justify-between">
+                        <span class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Meta</span>
+                        <span class="text-[10px] font-medium uppercase tracking-[0.08em] @priorityClasses border rounded px-1.5 py-0.5">@goal.Priority</span>
+                    </div>
+                    <div class="flex items-baseline justify-between mt-4">
+                        <span class="text-[19px] font-semibold text-paper">@goal.Name</span>
+                        <span class="font-mono text-[13px] text-muted">@(goal.PercentComplete)%</span>
+                    </div>
+                    <div class="font-mono text-[15px] text-paper mt-2.5">@("$" + goal.CurrentAmount.ToString("N0")) <span class="text-muted">/ @("$" + goal.TargetAmount.ToString("N0"))</span></div>
+                    <div class="h-1 rounded-full bg-ash mt-4 overflow-hidden"><div class="h-full bg-paper" style="width:@(goal.PercentComplete)%"></div></div>
+                    <div class="flex items-center justify-between mt-3.5">
+                        <span class="text-[12px] text-muted">Faltan @("$" + goal.Remaining.ToString("N0"))</span>
+                        <span class="text-[12px] text-muted">@goal.TargetDate.ToString("d MMM yyyy")</span>
+                    </div>
+                </button>
+
+                <div class="goal-detail hidden border-t border-ash px-6 pb-6 pt-5" data-goal-detail>
+                    <div class="rounded-lg overflow-hidden bg-graphite-2 border border-ash" style="aspect-ratio:16/9">
+                        @if (!string.IsNullOrEmpty(goal.ImageUrl))
+                        {
+                            <img src="@goal.ImageUrl" alt="@goal.Name" class="goal-image w-full h-full object-cover" data-goal-image />
+                        }
+                        else
+                        {
+                            <div class="goal-image-placeholder w-full h-full flex items-center justify-center text-[12px] text-muted" data-goal-image-placeholder>
+                                Sin foto todavía
+                            </div>
+                        }
+                    </div>
+                    <div class="flex items-center gap-2.5 mt-3.5">
+                        <input type="file" accept="image/*" class="hidden" data-goal-file />
+                        <button type="button" class="rounded-lg border border-ash px-3.5 py-2 text-[12px] font-medium text-paper" data-goal-upload>
+                            @(string.IsNullOrEmpty(goal.ImageUrl) ? "Agregar foto" : "Cambiar foto")
+                        </button>
+                        @if (!string.IsNullOrEmpty(goal.ImageUrl))
+                        {
+                            <button type="button" class="rounded-lg border border-ash px-3.5 py-2 text-[12px] font-medium text-harsh" data-goal-remove-image>
+                                Quitar foto
+                            </button>
+                        }
+                        <span class="text-[11.5px] text-muted" data-goal-image-status></span>
+                    </div>
                 </div>
             </div>
         }
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/personal/metas.js" defer></script>
+}

@@ -30,6 +30,7 @@ builder.Services.Configure<RazorViewEngineOptions>(options =>
 // Supabase
 builder.Services.Configure<SupabaseClientOptions>(builder.Configuration.GetSection("Supabase"));
 var supabaseOptions = builder.Configuration.GetSection("Supabase").Get<SupabaseClientOptions>() ?? new SupabaseClientOptions();
+builder.Services.AddSingleton(supabaseOptions);
 builder.Services.AddScoped(_ => SupabaseClientFactory.Create(supabaseOptions));
 builder.Services.AddScoped<ICurrentUserService, SupabaseCurrentUserService>();
 builder.Services.AddHttpContextAccessor();
@@ -46,6 +47,7 @@ if (supabaseOptions.UseDummyData)
     builder.Services.AddScoped<IDebtRepository, DummyDebtRepository>();
     builder.Services.AddScoped<ICreditAccountRepository, DummyCreditAccountRepository>();
     builder.Services.AddScoped<IBusinessRepository, DummyBusinessRepository>();
+    builder.Services.AddScoped<IGoalImageStorage, DummyGoalImageStorage>();
 }
 else
 {
@@ -65,17 +67,24 @@ else
     builder.Services.AddScoped<ICostRepository, SupabaseCostRepository>();
     builder.Services.AddScoped<ITaxRepository, SupabaseTaxRepository>();
     builder.Services.AddScoped<IInvestmentRepository, SupabaseInvestmentRepository>();
+    builder.Services.AddScoped<IRecurringIncomeRepository, SupabaseRecurringIncomeRepository>();
+    builder.Services.AddScoped<IBusinessAccountRepository, SupabaseBusinessAccountRepository>();
+    builder.Services.AddScoped<ITransferRepository, SupabaseTransferRepository>();
+    builder.Services.AddScoped<IGoalImageStorage, SupabaseGoalImageStorage>();
 }
 
 // Servicios de aplicacion
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IIncomeService, IncomeService>();
+builder.Services.AddScoped<IRecurringIncomeService, RecurringIncomeService>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddScoped<ICommitmentService, CommitmentService>();
 builder.Services.AddScoped<IGoalService, GoalService>();
 builder.Services.AddScoped<IDebtService, DebtService>();
 builder.Services.AddScoped<ICreditAccountService, CreditAccountService>();
 builder.Services.AddScoped<IBusinessService, BusinessService>();
+builder.Services.AddScoped<IBusinessAccountService, BusinessAccountService>();
+builder.Services.AddScoped<ITransferService, TransferService>();
 builder.Services.AddScoped<ISaleService, SaleService>();
 builder.Services.AddScoped<IBusinessExpenseService, BusinessExpenseService>();
 builder.Services.AddScoped<ICollectionService, CollectionService>();

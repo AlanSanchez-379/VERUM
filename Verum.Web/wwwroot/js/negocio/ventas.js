@@ -9,6 +9,7 @@
   submitBtn.addEventListener("click", async () => {
     const description = document.getElementById("ventas-description").value.trim();
     const amount = parseFloat(document.getElementById("ventas-amount").value);
+    const accountId = document.getElementById("ventas-account").value;
 
     errorBox.classList.add("hidden");
 
@@ -24,7 +25,7 @@
       const res = await fetch(registerUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ description, amount }),
+        body: JSON.stringify({ description, amount, accountId }),
       });
 
       const data = await res.json();

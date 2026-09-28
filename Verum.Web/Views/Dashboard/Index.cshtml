@@ -14,12 +14,47 @@
             <a href="/personal/simulacion" class="rounded-lg border border-ash px-3.5 py-2.5 text-[12.5px] font-medium text-paper">
                 &iquest;Qu&eacute; pasa si...?
             </a>
-            <a href="/personal/gastos" class="flex items-center gap-2 rounded-lg bg-paper px-4 py-2.5">
+            <a href="/registrar" class="flex items-center gap-2 rounded-lg bg-paper px-4 py-2.5">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#090A0C" stroke-width="2.2" stroke-linecap="round" /></svg>
                 <span class="text-[12.5px] font-semibold text-obsidian">Registrar</span>
             </a>
         </div>
     </div>
+
+    @if (Model.PendingIncomeConfirmations.Count > 0)
+    {
+        <div id="pending-confirmations-app" class="flex flex-col gap-3">
+            @foreach (var pending in Model.PendingIncomeConfirmations)
+            {
+                <div class="border border-focus/40 rounded-xl p-5" style="background:rgba(77,141,255,.06)" data-pending-row data-id="@pending.RecurringIncomeId" data-expected="@pending.ExpectedAmount">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-[10px] font-medium uppercase tracking-[0.14em] text-focus">Confirmaci&oacute;n pendiente</div>
+                            <div class="text-[15px] font-medium text-paper mt-1">&iquest;Te lleg&oacute; <span class="text-muted">@pending.Source</span>?</div>
+                            <div class="text-[12px] text-muted mt-0.5">Esperabas ~@("$" + pending.ExpectedAmount.ToString("N0")) el @pending.ExpectedDate.ToString("d MMM")</div>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 mt-3.5">
+                        <input type="number" min="0" step="0.01" data-actual-amount value="@pending.ExpectedAmount"
+                               class="w-32 rounded-lg border border-ash bg-graphite-2 px-3 py-2 text-[13px] text-paper outline-none focus:border-focus" />
+                        <select data-account-select class="rounded-lg border border-ash bg-graphite-2 px-3 py-2 text-[13px] text-paper outline-none focus:border-focus">
+                            @foreach (var account in Model.Accounts)
+                            {
+                                <option value="@account.Id">@account.Name</option>
+                            }
+                        </select>
+                        <button type="button" data-confirm class="rounded-lg bg-paper text-obsidian text-[12.5px] font-medium px-3.5 py-2 hover:bg-paper/90">
+                            Confirmar
+                        </button>
+                        <button type="button" data-confirm-nothing class="rounded-lg border border-ash px-3.5 py-2 text-[12.5px] text-muted hover:bg-graphite-2">
+                            No lleg&oacute; nada
+                        </button>
+                    </div>
+                    <div data-pending-error class="hidden mt-2.5 text-[12px] text-harsh"></div>
+                </div>
+            }
+        </div>
+    }
 
     <div class="grid grid-cols-1 md:grid-cols-[1.15fr_1fr_1fr_1fr] gap-px bg-graphite-2 border border-ash rounded-xl overflow-hidden">
         <div class="bg-graphite p-6 md:p-7">
@@ -82,7 +117,13 @@
         <div class="flex flex-col gap-5">
             @if (Model.PriorityGoal is { } goal)
             {
-                <div class="border border-ash rounded-xl bg-graphite p-6">
+                <a href="/personal/metas" class="border border-ash rounded-xl bg-graphite p-6 block hover:border-ash-light">
+                    @if (!string.IsNullOrEmpty(goal.ImageUrl))
+                    {
+                        <div class="rounded-lg overflow-hidden mb-4" style="aspect-ratio:16/9">
+                            <img src="@goal.ImageUrl" alt="@goal.Name" class="w-full h-full object-cover" />
+                        </div>
+                    }
                     <div class="flex items-baseline justify-between">
                         <span class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Meta prioritaria</span>
                         <span class="text-[10px] font-medium uppercase tracking-[0.08em] text-focus border border-focus/40 rounded px-1.5 py-0.5">@goal.Priority</span>
@@ -95,9 +136,9 @@
                     <div class="h-1 rounded-full bg-ash mt-4 overflow-hidden"><div class="h-full bg-paper" style="width:@(goal.PercentComplete)%"></div></div>
                     <div class="flex items-center justify-between mt-3.5">
                         <span class="text-[12px] text-muted">Faltan @("$" + goal.Remaining.ToString("N0"))</span>
-                        <a href="/personal/metas" class="text-[12px] font-medium text-focus">Ver mi camino &rarr;</a>
+                        <span class="text-[12px] font-medium text-focus">Ver mi camino &rarr;</span>
                     </div>
-                </div>
+                </a>
             }
 
             <div class="border border-dashed border-ash-light rounded-xl p-6 flex-1" style="background:rgba(46,107,255,.04)">
@@ -169,10 +210,14 @@
             {
                 <div class="flex justify-between pt-3.5 mt-1 border-t border-ash">
                     <span class="text-[12px] text-muted">Cr&eacute;dito disponible</span>
-                    <a href="/personal/credito" class="font-mono text-[12px] text-muted">@("$" + Model.CreditAvailable.ToString("N0")) &middot; aparte</a>
+                    <a href="/personal/cuentas" class="font-mono text-[12px] text-muted">@("$" + Model.CreditAvailable.ToString("N0")) &middot; aparte</a>
                 </div>
             }
         </div>
     </div>
 
 </div>
+
+@section Scripts {
+    <script src="~/js/personal/pending-confirmations.js" defer></script>
+}

@@ -23,9 +23,26 @@ public class SupabaseIncomeRepository : IIncomeRepository
         return response.Models.Select(ToEntity).ToList();
     }
 
+    public async Task AddAsync(Income income)
+    {
+        var row = new IncomeRow
+        {
+            UserId = _currentUser.UserId,
+            AccountId = income.AccountId,
+            Source = income.Source,
+            Amount = income.Amount,
+            ExpectedDate = income.ExpectedDate,
+            IsReceived = income.IsReceived
+        };
+
+        var response = await _client.From<IncomeRow>().Insert(row);
+        income.Id = response.Models.First().Id;
+    }
+
     private static Income ToEntity(IncomeRow row) => new()
     {
         Id = row.Id,
+        AccountId = row.AccountId,
         Source = row.Source,
         Amount = row.Amount,
         ExpectedDate = row.ExpectedDate,

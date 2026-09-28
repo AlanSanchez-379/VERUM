@@ -8,10 +8,14 @@ namespace Verum.Application.Services;
 public class TaxService : ITaxService
 {
     private readonly ITaxRepository _taxRepository;
+    private readonly IBusinessExpenseService _expenseService;
+    private readonly IBusinessAccountService _accountService;
 
-    public TaxService(ITaxRepository taxRepository)
+    public TaxService(ITaxRepository taxRepository, IBusinessExpenseService expenseService, IBusinessAccountService accountService)
     {
         _taxRepository = taxRepository;
+        _expenseService = expenseService;
+        _accountService = accountService;
     }
 
     public async Task<List<TaxDto>> GetAllAsync(Guid businessId)
@@ -37,7 +41,19 @@ public class TaxService : ITaxService
         });
     }
 
-    public Task MarkPaidAsync(Guid businessId, Guid id) => _taxRepository.MarkPaidAsync(businessId, id);
+    public async Task MarkPaidAsync(Guid businessId, Guid id)
+    {
+        var taxes = await _taxRepository.GetAllAsync(businessId);
+        var tax = taxes.FirstOrDefault(t => t.Id == id);
+        if (tax is null || tax.IsPaid)
+        {
+            return;
+        }
+
+        await _taxRepository.MarkPaidAsync(businessId, id);
+        var accountId = await _accountService.GetOrCreateDefaultAccountIdAsync(businessId);
+        await _expenseService.RegisterExpenseAsync(businessId, accountId, $"Impuesto: {tax.Name}", tax.Amount);
+    }
 
     private static TaxDto ToDto(Tax t) => new(t.Id, t.BusinessId, t.Name, t.Amount, t.DueDate, t.IsPaid);
 }

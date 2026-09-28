@@ -48,6 +48,16 @@ public class SupabaseBusinessRepository : IBusinessRepository
         return ToEntity(response.Models.First());
     }
 
+    public async Task RenameAsync(Guid id, string name)
+    {
+        var userId = _currentUser.UserId;
+        await _client.From<BusinessRow>()
+            .Where(b => b.UserId == userId)
+            .Where(b => b.Id == id)
+            .Set(b => b.Name, name)
+            .Update();
+    }
+
     private static Business ToEntity(BusinessRow row) => new()
     {
         Id = row.Id,

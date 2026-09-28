@@ -13,12 +13,13 @@
   --color-graphite-2: #171B20;
   --color-ash: #252A31;
   --color-ash-light: #343A43;
-  --color-muted: #7C8794;
-  --color-paper: #F5F6F7;
+  --color-secondary: #A7ADB7;
+  --color-muted: #6F7682;
+  --color-paper: #F5F7FA;
 
-  --color-focus: #2E6BFF;
-  --color-ascend: #1FB97A;
-  --color-harsh: #E5484D;
+  --color-focus: #4D8DFF;
+  --color-ascend: #35D07F;
+  --color-harsh: #FF5C67;
 }
 
 @layer base {

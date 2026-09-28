@@ -10,4 +10,5 @@ public class Goal
     public decimal CurrentAmount { get; set; }
     public DateTime TargetDate { get; set; }
     public GoalPriority Priority { get; set; }
+    public string? ImagePath { get; set; }
 }

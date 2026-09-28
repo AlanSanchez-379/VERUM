@@ -8,10 +8,12 @@ namespace Verum.Application.Services;
 public class BusinessExpenseService : IBusinessExpenseService
 {
     private readonly IBusinessExpenseRepository _expenseRepository;
+    private readonly IBusinessAccountRepository _accountRepository;
 
-    public BusinessExpenseService(IBusinessExpenseRepository expenseRepository)
+    public BusinessExpenseService(IBusinessExpenseRepository expenseRepository, IBusinessAccountRepository accountRepository)
     {
         _expenseRepository = expenseRepository;
+        _accountRepository = accountRepository;
     }
 
     public async Task<List<BusinessExpenseDto>> GetRecentAsync(Guid businessId, int count)
@@ -32,21 +34,30 @@ public class BusinessExpenseService : IBusinessExpenseService
         return expenses.Sum(e => e.Amount);
     }
 
-    public async Task RegisterExpenseAsync(Guid businessId, string category, decimal amount)
+    public async Task RegisterExpenseAsync(Guid businessId, Guid accountId, string category, decimal amount)
     {
         if (amount <= 0)
         {
             return;
         }
 
+        var account = await _accountRepository.GetByIdAsync(businessId, accountId);
+        if (account is null)
+        {
+            return;
+        }
+
+        await _accountRepository.UpdateBalanceAsync(businessId, accountId, account.Balance - amount);
+
         await _expenseRepository.AddAsync(new BusinessExpense
         {
             BusinessId = businessId,
+            AccountId = accountId,
             Category = category,
             Amount = amount,
             Date = DateTime.UtcNow
         });
     }
 
-    private static BusinessExpenseDto ToDto(BusinessExpense e) => new(e.Id, e.BusinessId, e.Category, e.Amount, e.Date);
+    private static BusinessExpenseDto ToDto(BusinessExpense e) => new(e.Id, e.BusinessId, e.AccountId, e.Category, e.Amount, e.Date);
 }

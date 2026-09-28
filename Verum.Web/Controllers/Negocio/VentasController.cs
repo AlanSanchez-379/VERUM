@@ -8,11 +8,17 @@ namespace Verum.Web.Controllers.Negocio;
 public class VentasController : NegocioBaseController
 {
     private readonly ISaleService _saleService;
+    private readonly IBusinessAccountService _accountService;
 
-    public VentasController(IBusinessService businessService, ICurrentBusinessService currentBusiness, ISaleService saleService)
+    public VentasController(
+        IBusinessService businessService,
+        ICurrentBusinessService currentBusiness,
+        ISaleService saleService,
+        IBusinessAccountService accountService)
         : base(businessService, currentBusiness)
     {
         _saleService = saleService;
+        _accountService = accountService;
     }
 
     public async Task<IActionResult> Index()
@@ -23,11 +29,11 @@ public class VentasController : NegocioBaseController
             return Redirect("/negocio");
         }
 
-        var sales = await _saleService.GetAllAsync(business.Id);
         var vm = new NegocioSalesViewModel
         {
             Business = business,
-            Sales = sales
+            Sales = await _saleService.GetAllAsync(business.Id),
+            Accounts = await _accountService.GetAllAsync(business.Id)
         };
 
         return View(vm);
@@ -35,6 +41,7 @@ public class VentasController : NegocioBaseController
 
     public class RegisterSaleRequest
     {
+        public Guid AccountId { get; set; }
         public string Description { get; set; } = string.Empty;
         public decimal Amount { get; set; }
     }
@@ -58,7 +65,12 @@ public class VentasController : NegocioBaseController
             return BadRequest(new { error = "El monto debe ser mayor a cero." });
         }
 
-        await _saleService.RegisterSaleAsync(business.Id, request.Description.Trim(), request.Amount);
+        if (request.AccountId == Guid.Empty)
+        {
+            return BadRequest(new { error = "Elegí a qué cuenta entra la venta." });
+        }
+
+        await _saleService.RegisterSaleAsync(business.Id, request.AccountId, request.Description.Trim(), request.Amount);
         var total = await _saleService.GetTotalAsync(business.Id);
         return Ok(new { total });
     }

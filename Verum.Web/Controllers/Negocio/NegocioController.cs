@@ -35,6 +35,18 @@ public class NegocioController : Controller
         return Redirect("/negocio/dashboard");
     }
 
+    [HttpPost("renombrar")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Renombrar(Guid businessId, string name)
+    {
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            await _businessService.RenameAsync(businessId, name.Trim());
+        }
+
+        return RedirectToRoute(new { controller = "Negocio", action = "Index" });
+    }
+
     [HttpPost("seleccionar")]
     [ValidateAntiForgeryToken]
     public IActionResult Seleccionar(Guid businessId)

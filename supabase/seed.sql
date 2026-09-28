@@ -22,8 +22,8 @@ begin
         (uid, acc_bbva, 'Transporte', 95, now() - interval '2 day'),
         (uid, acc_nu, 'Café', 68, now() - interval '3 day');
 
-    insert into incomes (user_id, source, amount, expected_date, is_received) values
-        (uid, 'Sueldo', 5000, date_trunc('month', now())::date + 4, true);
+    insert into incomes (user_id, account_id, source, amount, expected_date, is_received) values
+        (uid, acc_bbva, 'Sueldo', 5000, date_trunc('month', now())::date + 4, true);
 
     insert into commitments (user_id, name, amount, due_date, is_paid) values
         (uid, 'Tarjeta BBVA', 2000, now() + interval '2 day', true),

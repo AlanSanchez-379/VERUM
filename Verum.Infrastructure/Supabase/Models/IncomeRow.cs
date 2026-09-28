@@ -12,6 +12,9 @@ public class IncomeRow : BaseModel
     [Column("user_id")]
     public Guid UserId { get; set; }
 
+    [Column("account_id")]
+    public Guid AccountId { get; set; }
+
     [Column("source")]
     public string Source { get; set; } = string.Empty;
 

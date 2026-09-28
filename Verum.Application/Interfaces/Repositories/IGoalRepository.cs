@@ -8,4 +8,6 @@ public interface IGoalRepository
     Task<List<Goal>> GetAllAsync();
     Task<Goal?> GetPriorityGoalAsync();
     Task UpdatePriorityAsync(Guid id, GoalPriority priority);
+    Task<Goal?> GetByIdAsync(Guid id);
+    Task UpdateImageAsync(Guid id, string? imagePath);
 }

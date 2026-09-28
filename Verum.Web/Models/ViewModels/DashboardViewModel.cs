@@ -21,6 +21,8 @@ public class DashboardViewModel
     public GoalDto? PriorityGoal { get; set; }
     public decimal CreditAvailable { get; set; }
 
+    public List<PendingIncomeConfirmationDto> PendingIncomeConfirmations { get; set; } = new();
+
     public decimal Margin => Math.Max(0, IncomeReceived - CommitmentsTotal - ExpensesTotal);
 
     public int CommittedPercent => IncomeReceived <= 0 ? 0 : (int)Math.Round(Math.Min(100m, CommitmentsTotal / IncomeReceived * 100m));

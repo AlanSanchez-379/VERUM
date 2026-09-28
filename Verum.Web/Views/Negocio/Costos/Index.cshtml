@@ -1,4 +1,4 @@
-@model Verum.Web.Models.ViewModels.NegocioCostsViewModel
+﻿@model Verum.Web.Models.ViewModels.NegocioCostsViewModel
 @{
     ViewData["Title"] = "Negocio - Costos";
 }
@@ -58,11 +58,11 @@
                 <span class="flex h-[38px] w-[38px] items-center justify-center rounded-lg @(c.IsPaid ? "bg-ascend/15" : "bg-ash")">
                     @if (c.IsPaid)
                     {
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#1FB97A" stroke-width="1.8" /></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#35D07F" stroke-width="1.8" /></svg>
                     }
                     else
                     {
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="15" rx="2" stroke="#7C8794" stroke-width="1.5" /><path d="M4 10h16" stroke="#7C8794" stroke-width="1.5" /></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="15" rx="2" stroke="#6F7682" stroke-width="1.5" /><path d="M4 10h16" stroke="#6F7682" stroke-width="1.5" /></svg>
                     }
                 </span>
                 <span class="flex-1">

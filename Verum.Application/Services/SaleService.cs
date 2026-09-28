@@ -8,10 +8,12 @@ namespace Verum.Application.Services;
 public class SaleService : ISaleService
 {
     private readonly ISaleRepository _saleRepository;
+    private readonly IBusinessAccountRepository _accountRepository;
 
-    public SaleService(ISaleRepository saleRepository)
+    public SaleService(ISaleRepository saleRepository, IBusinessAccountRepository accountRepository)
     {
         _saleRepository = saleRepository;
+        _accountRepository = accountRepository;
     }
 
     public async Task<List<SaleDto>> GetRecentAsync(Guid businessId, int count)
@@ -32,21 +34,30 @@ public class SaleService : ISaleService
         return sales.Sum(s => s.Amount);
     }
 
-    public async Task RegisterSaleAsync(Guid businessId, string description, decimal amount)
+    public async Task RegisterSaleAsync(Guid businessId, Guid accountId, string description, decimal amount)
     {
         if (amount <= 0)
         {
             return;
         }
 
+        var account = await _accountRepository.GetByIdAsync(businessId, accountId);
+        if (account is null)
+        {
+            return;
+        }
+
+        await _accountRepository.UpdateBalanceAsync(businessId, accountId, account.Balance + amount);
+
         await _saleRepository.AddAsync(new Sale
         {
             BusinessId = businessId,
+            AccountId = accountId,
             Description = description,
             Amount = amount,
             Date = DateTime.UtcNow
         });
     }
 
-    private static SaleDto ToDto(Sale s) => new(s.Id, s.BusinessId, s.Description, s.Amount, s.Date);
+    private static SaleDto ToDto(Sale s) => new(s.Id, s.BusinessId, s.AccountId, s.Description, s.Amount, s.Date);
 }

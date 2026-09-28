@@ -7,4 +7,5 @@ public interface IBusinessRepository
     Task<List<Business>> GetAllAsync();
     Task<Business?> GetByIdAsync(Guid id);
     Task<Business> CreateAsync(Business business);
+    Task RenameAsync(Guid id, string name);
 }

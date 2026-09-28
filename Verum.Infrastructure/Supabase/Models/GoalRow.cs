@@ -26,4 +26,7 @@ public class GoalRow : BaseModel
 
     [Column("priority")]
     public string Priority { get; set; } = "Media";
+
+    [Column("image_path")]
+    public string? ImagePath { get; set; }
 }

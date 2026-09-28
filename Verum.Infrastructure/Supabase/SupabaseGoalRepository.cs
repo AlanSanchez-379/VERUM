@@ -40,6 +40,30 @@ public class SupabaseGoalRepository : IGoalRepository
             .Update();
     }
 
+    public async Task<Goal?> GetByIdAsync(Guid id)
+    {
+        var userId = _currentUser.UserId;
+        var response = await _client.From<GoalRow>()
+            .Where(g => g.UserId == userId)
+            .Where(g => g.Id == id)
+            .Get();
+        var row = response.Models.FirstOrDefault();
+        return row is null ? null : ToEntity(row);
+    }
+
+    public async Task UpdateImageAsync(Guid id, string? imagePath)
+    {
+        // Postgrest.Table.Set no acepta null para un campo string via lambda:
+        // usamos "" para representar "sin imagen" (ya se trata igual que null
+        // en todo el resto del código via string.IsNullOrEmpty).
+        var userId = _currentUser.UserId;
+        await _client.From<GoalRow>()
+            .Where(g => g.UserId == userId)
+            .Where(g => g.Id == id)
+            .Set(g => g.ImagePath, imagePath ?? string.Empty)
+            .Update();
+    }
+
     private static Goal ToEntity(GoalRow row) => new()
     {
         Id = row.Id,
@@ -47,6 +71,7 @@ public class SupabaseGoalRepository : IGoalRepository
         TargetAmount = row.TargetAmount,
         CurrentAmount = row.CurrentAmount,
         TargetDate = row.TargetDate,
-        Priority = Enum.Parse<GoalPriority>(row.Priority)
+        Priority = Enum.Parse<GoalPriority>(row.Priority),
+        ImagePath = row.ImagePath
     };
 }

@@ -68,4 +68,25 @@ public class DummyGoalRepository : IGoalRepository
         }
         return Task.CompletedTask;
     }
+
+    public Task<Goal?> GetByIdAsync(Guid id)
+    {
+        lock (Lock)
+        {
+            return Task.FromResult(Goals.FirstOrDefault(g => g.Id == id));
+        }
+    }
+
+    public Task UpdateImageAsync(Guid id, string? imagePath)
+    {
+        lock (Lock)
+        {
+            var goal = Goals.FirstOrDefault(g => g.Id == id);
+            if (goal is not null)
+            {
+                goal.ImagePath = imagePath;
+            }
+        }
+        return Task.CompletedTask;
+    }
 }

@@ -8,10 +8,12 @@ namespace Verum.Application.Services;
 public class BusinessService : IBusinessService
 {
     private readonly IBusinessRepository _businessRepository;
+    private readonly IBusinessAccountService _accountService;
 
-    public BusinessService(IBusinessRepository businessRepository)
+    public BusinessService(IBusinessRepository businessRepository, IBusinessAccountService accountService)
     {
         _businessRepository = businessRepository;
+        _accountService = accountService;
     }
 
     public async Task<List<BusinessDto>> GetAllAsync()
@@ -35,8 +37,13 @@ public class BusinessService : IBusinessService
             CreatedAt = DateTime.UtcNow
         });
 
+        // Todo negocio nace con una cuenta real donde entra/sale su dinero.
+        await _accountService.CreateAsync(created.Id, "Caja", "Cuenta principal");
+
         return ToDto(created);
     }
+
+    public Task RenameAsync(Guid id, string name) => _businessRepository.RenameAsync(id, name);
 
     private static BusinessDto ToDto(Business b) => new(b.Id, b.Name, b.Industry, b.CreatedAt);
 }

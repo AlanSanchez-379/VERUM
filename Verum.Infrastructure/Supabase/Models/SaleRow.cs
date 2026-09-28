@@ -15,6 +15,9 @@ public class SaleRow : BaseModel
     [Column("business_id")]
     public Guid BusinessId { get; set; }
 
+    [Column("account_id")]
+    public Guid AccountId { get; set; }
+
     [Column("description")]
     public string Description { get; set; } = string.Empty;
 

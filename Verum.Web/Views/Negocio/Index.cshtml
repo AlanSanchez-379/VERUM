@@ -3,7 +3,7 @@
     ViewData["Title"] = "Mis negocios";
 }
 
-<div class="flex flex-col gap-6 md:gap-8 max-w-2xl">
+<div id="misnegocios-app" class="flex flex-col gap-6 md:gap-8 max-w-2xl">
     <div>
         <div class="text-[19px] md:text-[21px] font-medium text-paper tracking-tight">Mis negocios</div>
         <div class="text-[13px] text-muted mt-1">Elegí un negocio para ver su realidad, o creá uno nuevo.</div>
@@ -14,17 +14,41 @@
         <div class="flex flex-col gap-2.5">
             @foreach (var business in Model)
             {
-                <form method="post" action="/negocio/seleccionar">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="businessId" value="@business.Id" />
-                    <button type="submit" class="w-full flex items-center justify-between rounded-xl border border-ash bg-graphite px-5 py-4 text-left hover:border-ash-light">
-                        <div>
-                            <div class="text-[14px] font-medium text-paper">@business.Name</div>
-                            <div class="text-[12px] text-muted mt-0.5">@business.Industry</div>
+                <div class="rounded-xl border border-ash bg-graphite px-5 py-4" data-business-row data-id="@business.Id" data-name="@business.Name">
+                    <div class="flex items-center justify-between gap-3">
+                        <form method="post" action="/negocio/seleccionar" class="flex-1 min-w-0">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="businessId" value="@business.Id" />
+                            <button type="submit" class="w-full text-left">
+                                <div data-business-name class="text-[14px] font-medium text-paper truncate">@business.Name</div>
+                                <div class="text-[12px] text-muted mt-0.5">@business.Industry</div>
+                            </button>
+                        </form>
+                        <div class="flex items-center gap-3 shrink-0">
+                            <button type="button" data-rename-toggle class="text-[12px] text-muted hover:text-paper" aria-label="Renombrar">
+                                Renombrar
+                            </button>
+                            <form method="post" action="/negocio/seleccionar">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="businessId" value="@business.Id" />
+                                <button type="submit" class="text-[12px] text-focus">Entrar &rarr;</button>
+                            </form>
                         </div>
-                        <span class="text-[12px] text-focus">Entrar &rarr;</span>
-                    </button>
-                </form>
+                    </div>
+
+                    <form method="post" action="/negocio/renombrar" data-rename-form class="hidden mt-3 flex items-center gap-2">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="businessId" value="@business.Id" />
+                        <input type="text" name="name" value="@business.Name" data-rename-input
+                               class="flex-1 rounded-lg border border-ash bg-graphite-2 px-3 py-2 text-[13px] text-paper outline-none focus:border-focus" />
+                        <button type="submit" class="rounded-lg bg-paper text-obsidian text-[12px] font-medium px-3 py-2 hover:bg-paper/90">
+                            Guardar
+                        </button>
+                        <button type="button" data-rename-cancel class="rounded-lg border border-ash px-3 py-2 text-[12px] text-muted hover:bg-graphite-2">
+                            Cancelar
+                        </button>
+                    </form>
+                </div>
             }
         </div>
     }
@@ -55,3 +79,7 @@
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/negocio/index.js" defer></script>
+}

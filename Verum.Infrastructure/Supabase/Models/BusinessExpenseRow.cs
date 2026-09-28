@@ -15,6 +15,9 @@ public class BusinessExpenseRow : BaseModel
     [Column("business_id")]
     public Guid BusinessId { get; set; }
 
+    [Column("account_id")]
+    public Guid AccountId { get; set; }
+
     [Column("category")]
     public string Category { get; set; } = string.Empty;
 
