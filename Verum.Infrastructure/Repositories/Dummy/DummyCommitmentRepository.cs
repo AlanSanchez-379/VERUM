@@ -15,4 +15,14 @@ public class DummyCommitmentRepository : ICommitmentRepository
     };
 
     public Task<List<Commitment>> GetAllForCurrentPeriodAsync() => Task.FromResult(Commitments.ToList());
+
+    public Task MarkPaidAsync(Guid id)
+    {
+        var commitment = Commitments.FirstOrDefault(c => c.Id == id);
+        if (commitment is not null)
+        {
+            commitment.IsPaid = true;
+        }
+        return Task.CompletedTask;
+    }
 }

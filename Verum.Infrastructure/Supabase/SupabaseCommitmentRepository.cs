@@ -23,6 +23,16 @@ public class SupabaseCommitmentRepository : ICommitmentRepository
         return response.Models.Select(ToEntity).ToList();
     }
 
+    public async Task MarkPaidAsync(Guid id)
+    {
+        var userId = _currentUser.UserId;
+        await _client.From<CommitmentRow>()
+            .Where(c => c.UserId == userId)
+            .Where(c => c.Id == id)
+            .Set(c => c.IsPaid, true)
+            .Update();
+    }
+
     private static Commitment ToEntity(CommitmentRow row) => new()
     {
         Id = row.Id,

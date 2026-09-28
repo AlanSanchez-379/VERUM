@@ -1,12 +1,11 @@
-﻿@using Verum.Application.DTOs.Personal
-@model List<CommitmentDto>
+@model Verum.Web.Models.ViewModels.CompromisosViewModel
 @{
     ViewData["Title"] = "Personal - Compromisos";
-    var total = Model.Sum(c => c.Amount);
-    var pending = Model.Where(c => !c.IsPaid).Sum(c => c.Amount);
+    var total = Model.Commitments.Sum(c => c.Amount);
+    var pending = Model.Commitments.Where(c => !c.IsPaid).Sum(c => c.Amount);
 }
 
-<div class="flex flex-col gap-6 max-w-2xl">
+<div id="compromisos-app" class="flex flex-col gap-6 max-w-2xl">
     <div>
         <div class="text-[19px] font-medium text-paper tracking-tight">Compromisos del periodo</div>
         <div class="text-[13px] text-muted mt-1">Lo que ya est&aacute; destinado, pagado o no</div>
@@ -24,25 +23,46 @@
     </div>
 
     <div class="flex flex-col gap-2">
-        @foreach (var commitment in Model)
+        @foreach (var commitment in Model.Commitments)
         {
-            <div class="flex items-center gap-3.5 rounded-xl border border-ash bg-graphite px-5 py-4">
-                <span class="flex h-[38px] w-[38px] items-center justify-center rounded-lg @(commitment.IsPaid ? "bg-ascend/15" : "bg-ash")">
-                    @if (commitment.IsPaid)
-                    {
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#35D07F" stroke-width="1.8" /></svg>
-                    }
-                    else
-                    {
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="15" rx="2" stroke="#6F7682" stroke-width="1.5" /><path d="M4 10h16" stroke="#6F7682" stroke-width="1.5" /></svg>
-                    }
-                </span>
-                <span class="flex-1">
-                    <span class="block text-[14.5px] font-medium text-paper">@commitment.Name</span>
-                    <span class="mt-0.5 block text-[11.5px] text-muted">@(commitment.IsPaid ? "Pagado" : "Vence") &middot; @commitment.DueDate.ToString("d MMM")</span>
-                </span>
-                <span class="font-mono text-[15px] font-medium @(commitment.IsPaid ? "text-muted" : "text-paper")">@("$" + commitment.Amount.ToString("N0"))</span>
+            <div class="flex flex-col gap-3 rounded-xl border border-ash bg-graphite px-5 py-4" data-commitment-row data-id="@commitment.Id">
+                <div class="flex items-center gap-3.5">
+                    <span class="flex h-[38px] w-[38px] items-center justify-center rounded-lg @(commitment.IsPaid ? "bg-ascend/15" : "bg-ash")">
+                        @if (commitment.IsPaid)
+                        {
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#35D07F" stroke-width="1.8" /></svg>
+                        }
+                        else
+                        {
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="15" rx="2" stroke="#6F7682" stroke-width="1.5" /><path d="M4 10h16" stroke="#6F7682" stroke-width="1.5" /></svg>
+                        }
+                    </span>
+                    <span class="flex-1">
+                        <span class="block text-[14.5px] font-medium text-paper">@commitment.Name</span>
+                        <span class="mt-0.5 block text-[11.5px] text-muted">@(commitment.IsPaid ? "Pagado" : "Vence") &middot; @commitment.DueDate.ToString("d MMM")</span>
+                    </span>
+                    <span class="font-mono text-[15px] font-medium @(commitment.IsPaid ? "text-muted" : "text-paper")">@("$" + commitment.Amount.ToString("N0"))</span>
+                </div>
+                @if (!commitment.IsPaid)
+                {
+                    <div class="flex items-center gap-2 pl-[50px]">
+                        <select data-commitment-account class="flex-1 rounded-lg border border-ash bg-graphite-2 px-3 py-2 text-[12px] text-paper outline-none focus:border-focus">
+                            @foreach (var account in Model.Accounts)
+                            {
+                                <option value="@account.Id">@account.Name &middot; $@account.Balance.ToString("N0")</option>
+                            }
+                        </select>
+                        <button type="button" data-mark-paid class="rounded-lg border border-ash px-3 py-2 text-[11.5px] font-medium text-paper hover:bg-graphite-2 whitespace-nowrap">
+                            Marcar pagado
+                        </button>
+                    </div>
+                    <div class="hidden pl-[50px] text-[11.5px] text-harsh" data-commitment-error></div>
+                }
             </div>
         }
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/personal/compromisos.js" defer></script>
+}
