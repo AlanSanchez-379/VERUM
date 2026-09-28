@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="~/css/tailwind.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/app.css" asp-append-version="true" />
     @await Html.PartialAsync("_PwaHead")
+    @await Html.PartialAsync("_CsrfMeta")
+    <script src="~/js/csrf.js"></script>
 </head>
 <body class="bg-obsidian text-paper font-sans antialiased">
     <div class="flex min-h-screen">

@@ -1,0 +1,5 @@
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@{
+    var csrfToken = Antiforgery.GetAndStoreTokens(Context).RequestToken;
+}
+<meta name="csrf-token" content="@csrfToken" />

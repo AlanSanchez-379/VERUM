@@ -21,6 +21,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add<RequireSupabaseAuthFilter>();
+    options.Filters.Add<JsonCsrfFilter>();
+});
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "X-CSRF-TOKEN";
 });
 builder.Services.Configure<RazorViewEngineOptions>(options =>
 {
