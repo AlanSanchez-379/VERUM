@@ -1,0 +1,34 @@
+@{
+    ViewData["Title"] = "Política de privacidad";
+    Layout = "_AuthLayout";
+}
+
+<div class="rounded-xl border border-ash bg-graphite p-6 max-w-lg text-left">
+    <h1 class="text-[17px] font-semibold text-paper pb-1">Política de privacidad</h1>
+    <p class="text-[11.5px] text-muted pb-6">Última actualización: @DateTime.UtcNow.ToString("d MMMM yyyy")</p>
+
+    <div class="flex flex-col gap-5 text-[13px] text-paper leading-relaxed">
+        <div>
+            <div class="text-[11px] font-medium uppercase tracking-[0.1em] text-muted pb-1.5">Qué datos guardamos</div>
+            <p>Tu correo electrónico (para iniciar sesión) y la información financiera que vos cargás a mano: cuentas, ingresos, gastos, metas, negocios, ventas y transferencias. Si adjuntás una foto a una meta, esa imagen también se guarda.</p>
+        </div>
+        <div>
+            <div class="text-[11px] font-medium uppercase tracking-[0.1em] text-muted pb-1.5">Dónde vive esa información</div>
+            <p>En Supabase (Postgres + Storage), con seguridad a nivel de fila: cada dato queda ligado a tu usuario y solo vos podés leerlo o editarlo, incluso dentro de nuestra propia base de datos.</p>
+        </div>
+        <div>
+            <div class="text-[11px] font-medium uppercase tracking-[0.1em] text-muted pb-1.5">Para qué se usa</div>
+            <p>Únicamente para mostrarte tu propia información dentro de la aplicación. No vendemos ni compartimos tus datos con terceros, y no usamos tu información financiera con fines publicitarios.</p>
+        </div>
+        <div>
+            <div class="text-[11px] font-medium uppercase tracking-[0.1em] text-muted pb-1.5">Cookies</div>
+            <p>Usamos únicamente cookies técnicas necesarias para mantener tu sesión iniciada y protegerte contra ataques CSRF. No usamos cookies de rastreo ni de publicidad, ni analítica de terceros.</p>
+        </div>
+        <div>
+            <div class="text-[11px] font-medium uppercase tracking-[0.1em] text-muted pb-1.5">Borrar tu cuenta y tus datos</div>
+            <p>Podés pedir que se elimine tu cuenta y toda tu información en cualquier momento contactando a quien te dio acceso a esta aplicación.</p>
+        </div>
+    </div>
+
+    <a href="/auth/register" class="inline-block mt-6 text-[12px] font-medium text-focus">&larr; Volver</a>
+</div>

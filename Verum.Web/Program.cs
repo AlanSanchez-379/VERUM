@@ -26,6 +26,9 @@ builder.Services.AddControllersWithViews(options =>
 builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "X-CSRF-TOKEN";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
 });
 // Ningun origen externo esta permitido a proposito: la app solo se usa desde
 // si misma. Declarado explicito en vez de dejarlo como una ausencia de config.
@@ -116,7 +119,36 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
 }
+app.UseHttpsRedirection();
+app.UseStatusCodePagesWithReExecute("/error/{0}");
+
+// Headers de seguridad en toda respuesta: nunca se permite que la app se
+// embeba en un iframe ajeno, nunca se adivina el content-type de un archivo
+// subido por el usuario, y los scripts/estilos solo cargan desde origenes
+// conocidos (self + Google Fonts + el bucket de Supabase Storage).
+app.Use(async (context, next) =>
+{
+    var headers = context.Response.Headers;
+    headers["X-Frame-Options"] = "DENY";
+    headers["X-Content-Type-Options"] = "nosniff";
+    headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    headers["Permissions-Policy"] = "geolocation=(), camera=(), microphone=()";
+    headers["Content-Security-Policy"] =
+        "default-src 'self'; " +
+        "script-src 'self'; " +
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+        "font-src 'self' https://fonts.gstatic.com; " +
+        "img-src 'self' data: https://*.supabase.co; " +
+        "connect-src 'self'; " +
+        "object-src 'none'; " +
+        "frame-ancestors 'none'; " +
+        "base-uri 'self'; " +
+        "form-action 'self';";
+    await next();
+});
+
 app.UseStaticFiles();
 
 app.UseRouting();

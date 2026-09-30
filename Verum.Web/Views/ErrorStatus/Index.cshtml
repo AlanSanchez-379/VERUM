@@ -1,0 +1,26 @@
+@{
+    Layout = "_AuthLayout";
+    var code = (int)(ViewData["Code"] ?? 404);
+    var title = code switch
+    {
+        404 => "Página no encontrada",
+        403 => "Acceso denegado",
+        _ => "Algo salió mal"
+    };
+    var message = code switch
+    {
+        404 => "La página que buscás no existe o se movió de lugar.",
+        403 => "No tenés permiso para ver esto.",
+        _ => "Ocurrió un error inesperado. Probá de nuevo en un momento."
+    };
+    ViewData["Title"] = title;
+}
+
+<div class="rounded-xl border border-ash bg-graphite p-6 text-center">
+    <div class="font-mono text-[13px] text-muted">@code</div>
+    <h1 class="text-[17px] font-semibold text-paper pt-2 pb-1">@title</h1>
+    <p class="text-[13px] text-muted pb-6">@message</p>
+    <a href="/Dashboard" class="inline-block rounded-lg bg-paper text-obsidian text-[13px] font-medium py-2.5 px-5 hover:bg-paper/90">
+        Volver al inicio
+    </a>
+</div>

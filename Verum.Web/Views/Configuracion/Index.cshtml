@@ -14,7 +14,8 @@
         <div class="text-[15px] text-paper mt-2.5">@(string.IsNullOrEmpty(email) ? "—" : email)</div>
     </div>
 
-    <div class="border border-ash rounded-xl bg-graphite p-6">
+    <div class="border border-ash rounded-xl bg-graphite p-6 flex flex-col gap-3">
+        <a href="/privacidad" class="text-[13px] font-medium text-paper">Política de privacidad</a>
         <a href="/auth/logout" class="text-[13px] font-medium text-harsh">Cerrar sesión</a>
     </div>
 </div>
