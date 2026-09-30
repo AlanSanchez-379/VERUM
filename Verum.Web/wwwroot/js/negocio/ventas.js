@@ -5,11 +5,21 @@
   const registerUrl = app.dataset.registerUrl;
   const errorBox = document.getElementById("ventas-error");
   const submitBtn = document.getElementById("ventas-submit");
+  const creditCheckbox = document.getElementById("ventas-credit");
+  const cashFields = document.getElementById("ventas-cash-fields");
+  const creditFields = document.getElementById("ventas-credit-fields");
+
+  creditCheckbox.addEventListener("change", () => {
+    const isCredit = creditCheckbox.checked;
+    cashFields.classList.toggle("hidden", isCredit);
+    creditFields.classList.toggle("hidden", !isCredit);
+    creditFields.classList.toggle("flex", isCredit);
+  });
 
   submitBtn.addEventListener("click", async () => {
     const description = document.getElementById("ventas-description").value.trim();
     const amount = parseFloat(document.getElementById("ventas-amount").value);
-    const accountId = document.getElementById("ventas-account").value;
+    const isCredit = creditCheckbox.checked;
 
     errorBox.classList.add("hidden");
 
@@ -19,13 +29,22 @@
       return;
     }
 
+    const payload = { description, amount, isCredit };
+
+    if (isCredit) {
+      payload.clientName = document.getElementById("ventas-client").value.trim();
+      payload.dueDate = document.getElementById("ventas-duedate").value || null;
+    } else {
+      payload.accountId = document.getElementById("ventas-account").value;
+    }
+
     submitBtn.disabled = true;
 
     try {
       const res = await fetch(registerUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ description, amount, accountId }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
