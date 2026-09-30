@@ -53,15 +53,21 @@
     const btn = row.querySelector("[data-mark-paid]");
     if (!btn) return;
     btn.addEventListener("click", async () => {
+      errorBox.classList.add("hidden");
       btn.disabled = true;
       try {
         const res = await fetch(`/negocio/impuestos/pagar/${row.dataset.id}`, { method: "POST" });
         if (res.ok) {
           location.reload();
         } else {
+          const data = await res.json().catch(() => ({}));
+          errorBox.textContent = data.error || "No se pudo marcar como pagado.";
+          errorBox.classList.remove("hidden");
           btn.disabled = false;
         }
       } catch (err) {
+        errorBox.textContent = "Error de conexión. Intenta de nuevo.";
+        errorBox.classList.remove("hidden");
         btn.disabled = false;
       }
     });

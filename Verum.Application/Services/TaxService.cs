@@ -41,18 +41,24 @@ public class TaxService : ITaxService
         });
     }
 
-    public async Task MarkPaidAsync(Guid businessId, Guid id)
+    public async Task<BusinessExpenseResult> MarkPaidAsync(Guid businessId, Guid id)
     {
         var taxes = await _taxRepository.GetAllAsync(businessId);
         var tax = taxes.FirstOrDefault(t => t.Id == id);
         if (tax is null || tax.IsPaid)
         {
-            return;
+            return new BusinessExpenseResult(false, "El impuesto no existe o ya está pagado.");
+        }
+
+        var accountId = await _accountService.GetOrCreateDefaultAccountIdAsync(businessId);
+        var result = await _expenseService.RegisterExpenseAsync(businessId, accountId, $"Impuesto: {tax.Name}", tax.Amount);
+        if (!result.Success)
+        {
+            return result;
         }
 
         await _taxRepository.MarkPaidAsync(businessId, id);
-        var accountId = await _accountService.GetOrCreateDefaultAccountIdAsync(businessId);
-        await _expenseService.RegisterExpenseAsync(businessId, accountId, $"Impuesto: {tax.Name}", tax.Amount);
+        return result;
     }
 
     private static TaxDto ToDto(Tax t) => new(t.Id, t.BusinessId, t.Name, t.Amount, t.DueDate, t.IsPaid);

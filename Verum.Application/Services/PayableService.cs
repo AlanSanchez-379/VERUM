@@ -41,22 +41,27 @@ public class PayableService : IPayableService
         });
     }
 
-    public async Task MarkPaidAsync(Guid businessId, Guid id)
+    public async Task<BusinessExpenseResult> MarkPaidAsync(Guid businessId, Guid id)
     {
         var payables = await _payableRepository.GetAllAsync(businessId);
         var payable = payables.FirstOrDefault(p => p.Id == id);
         if (payable is null || payable.IsPaid)
         {
             // ya pagado o no existe: no volver a restar el dinero.
-            return;
+            return new BusinessExpenseResult(false, "El proveedor no existe o ya está pagado.");
         }
-
-        await _payableRepository.MarkPaidAsync(businessId, id);
 
         // El pago es plata real que sale recien ahora: se refleja como gasto,
         // no en el momento en que se registro la obligacion pendiente.
         var accountId = await _accountService.GetOrCreateDefaultAccountIdAsync(businessId);
-        await _expenseService.RegisterExpenseAsync(businessId, accountId, $"Proveedor: {payable.SupplierName}", payable.Amount);
+        var result = await _expenseService.RegisterExpenseAsync(businessId, accountId, $"Proveedor: {payable.SupplierName}", payable.Amount);
+        if (!result.Success)
+        {
+            return result;
+        }
+
+        await _payableRepository.MarkPaidAsync(businessId, id);
+        return result;
     }
 
     private static PayableDto ToDto(Payable p) => new(p.Id, p.BusinessId, p.SupplierName, p.Amount, p.DueDate, p.IsPaid);

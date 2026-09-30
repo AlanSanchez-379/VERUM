@@ -34,17 +34,22 @@ public class BusinessExpenseService : IBusinessExpenseService
         return expenses.Sum(e => e.Amount);
     }
 
-    public async Task RegisterExpenseAsync(Guid businessId, Guid accountId, string category, decimal amount)
+    public async Task<BusinessExpenseResult> RegisterExpenseAsync(Guid businessId, Guid accountId, string category, decimal amount)
     {
         if (amount <= 0)
         {
-            return;
+            return new BusinessExpenseResult(false, "El monto debe ser mayor a cero.");
         }
 
         var account = await _accountRepository.GetByIdAsync(businessId, accountId);
         if (account is null)
         {
-            return;
+            return new BusinessExpenseResult(false, "La cuenta no existe.");
+        }
+
+        if (account.Balance < amount)
+        {
+            return new BusinessExpenseResult(false, $"No hay suficiente saldo en {account.Name} para este gasto.");
         }
 
         await _accountRepository.UpdateBalanceAsync(businessId, accountId, account.Balance - amount);
@@ -57,6 +62,8 @@ public class BusinessExpenseService : IBusinessExpenseService
             Amount = amount,
             Date = DateTime.UtcNow
         });
+
+        return new BusinessExpenseResult(true, null);
     }
 
     private static BusinessExpenseDto ToDto(BusinessExpense e) => new(e.Id, e.BusinessId, e.AccountId, e.Category, e.Amount, e.Date);

@@ -70,7 +70,12 @@ public class GastosController : NegocioBaseController
             return BadRequest(new { error = "Elegí de qué cuenta sale el gasto." });
         }
 
-        await _expenseService.RegisterExpenseAsync(business.Id, request.AccountId, request.Category.Trim(), request.Amount);
+        var result = await _expenseService.RegisterExpenseAsync(business.Id, request.AccountId, request.Category.Trim(), request.Amount);
+        if (!result.Success)
+        {
+            return BadRequest(new { error = result.Error });
+        }
+
         var total = await _expenseService.GetTotalAsync(business.Id);
         return Ok(new { total });
     }

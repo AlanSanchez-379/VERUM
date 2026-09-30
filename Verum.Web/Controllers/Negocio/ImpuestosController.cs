@@ -77,7 +77,12 @@ public class ImpuestosController : NegocioBaseController
             return BadRequest(new { error = "No hay un negocio activo." });
         }
 
-        await _taxService.MarkPaidAsync(business.Id, id);
+        var result = await _taxService.MarkPaidAsync(business.Id, id);
+        if (!result.Success)
+        {
+            return BadRequest(new { error = result.Error });
+        }
+
         return Ok();
     }
 }

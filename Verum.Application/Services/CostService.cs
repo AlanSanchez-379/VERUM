@@ -41,18 +41,24 @@ public class CostService : ICostService
         });
     }
 
-    public async Task MarkPaidAsync(Guid businessId, Guid id)
+    public async Task<BusinessExpenseResult> MarkPaidAsync(Guid businessId, Guid id)
     {
         var costs = await _costRepository.GetAllAsync(businessId);
         var cost = costs.FirstOrDefault(c => c.Id == id);
         if (cost is null || cost.IsPaid)
         {
-            return;
+            return new BusinessExpenseResult(false, "El costo no existe o ya está pagado.");
+        }
+
+        var accountId = await _accountService.GetOrCreateDefaultAccountIdAsync(businessId);
+        var result = await _expenseService.RegisterExpenseAsync(businessId, accountId, $"Costo fijo: {cost.Name}", cost.Amount);
+        if (!result.Success)
+        {
+            return result;
         }
 
         await _costRepository.MarkPaidAsync(businessId, id);
-        var accountId = await _accountService.GetOrCreateDefaultAccountIdAsync(businessId);
-        await _expenseService.RegisterExpenseAsync(businessId, accountId, $"Costo fijo: {cost.Name}", cost.Amount);
+        return result;
     }
 
     private static CostDto ToDto(Cost c) => new(c.Id, c.BusinessId, c.Name, c.Amount, c.DueDate, c.IsPaid);

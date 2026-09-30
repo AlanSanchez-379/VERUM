@@ -56,6 +56,11 @@ public class ExpenseService : IExpenseService
             return new RegisterExpenseResult(false, "La cuenta no existe.", 0, 0);
         }
 
+        if (account.Balance < amount)
+        {
+            return new RegisterExpenseResult(false, $"No tenés suficiente saldo en {account.Name} para este gasto.", 0, 0);
+        }
+
         var newBalance = account.Balance - amount;
         await _accountRepository.UpdateBalanceAsync(accountId, newBalance);
 
