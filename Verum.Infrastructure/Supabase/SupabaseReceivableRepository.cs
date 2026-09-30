@@ -33,6 +33,7 @@ public class SupabaseReceivableRepository : IReceivableRepository
             UserId = _currentUser.UserId,
             BusinessId = receivable.BusinessId,
             ClientName = receivable.ClientName,
+            Description = receivable.Description,
             Amount = receivable.Amount,
             DueDate = receivable.DueDate,
             IsCollected = receivable.IsCollected
@@ -58,6 +59,7 @@ public class SupabaseReceivableRepository : IReceivableRepository
         Id = row.Id,
         BusinessId = row.BusinessId,
         ClientName = row.ClientName,
+        Description = row.Description,
         Amount = row.Amount,
         DueDate = row.DueDate,
         IsCollected = row.IsCollected

@@ -8,11 +8,13 @@ namespace Verum.Web.Controllers.Negocio;
 public class PorCobrarController : NegocioBaseController
 {
     private readonly ICollectionService _collectionService;
+    private readonly IBusinessAccountService _accountService;
 
-    public PorCobrarController(IBusinessService businessService, ICurrentBusinessService currentBusiness, ICollectionService collectionService)
+    public PorCobrarController(IBusinessService businessService, ICurrentBusinessService currentBusiness, ICollectionService collectionService, IBusinessAccountService accountService)
         : base(businessService, currentBusiness)
     {
         _collectionService = collectionService;
+        _accountService = accountService;
     }
 
     public async Task<IActionResult> Index()
@@ -27,7 +29,8 @@ public class PorCobrarController : NegocioBaseController
         var vm = new NegocioReceivablesViewModel
         {
             Business = business,
-            Receivables = receivables
+            Receivables = receivables,
+            Accounts = await _accountService.GetAllAsync(business.Id)
         };
 
         return View(vm);
@@ -36,6 +39,7 @@ public class PorCobrarController : NegocioBaseController
     public class RegisterReceivableRequest
     {
         public string ClientName { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         public decimal Amount { get; set; }
         public DateTime DueDate { get; set; }
     }
@@ -64,12 +68,17 @@ public class PorCobrarController : NegocioBaseController
             return BadRequest(new { error = "Ingresá una fecha de vencimiento." });
         }
 
-        await _collectionService.RegisterAsync(business.Id, request.ClientName.Trim(), request.Amount, request.DueDate);
+        await _collectionService.RegisterAsync(business.Id, request.ClientName.Trim(), request.Description?.Trim() ?? string.Empty, request.Amount, request.DueDate);
         return Ok();
     }
 
+    public class CobrarRequest
+    {
+        public Guid AccountId { get; set; }
+    }
+
     [HttpPost("cobrar/{id}")]
-    public async Task<IActionResult> Cobrar(Guid id)
+    public async Task<IActionResult> Cobrar(Guid id, [FromBody] CobrarRequest request)
     {
         var business = await GetActiveBusinessAsync();
         if (business is null)
@@ -77,7 +86,12 @@ public class PorCobrarController : NegocioBaseController
             return BadRequest(new { error = "No hay un negocio activo." });
         }
 
-        await _collectionService.MarkCollectedAsync(business.Id, id);
+        var result = await _collectionService.MarkCollectedAsync(business.Id, id, request.AccountId);
+        if (!result.Success)
+        {
+            return BadRequest(new { error = result.Error });
+        }
+
         return Ok();
     }
 }

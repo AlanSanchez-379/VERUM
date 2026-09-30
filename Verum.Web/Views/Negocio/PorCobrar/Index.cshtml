@@ -29,6 +29,11 @@
                 <input type="text" id="porcobrar-client" placeholder="Ej: Juan P&eacute;rez"
                        class="w-full rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-paper outline-none focus:border-focus" />
             </div>
+            <div>
+                <label class="block text-[11px] font-medium text-muted pb-1.5">Detalle (opcional)</label>
+                <input type="text" id="porcobrar-description" placeholder="Ej: Venta mostrador"
+                       class="w-full rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-paper outline-none focus:border-focus" />
+            </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-[11px] font-medium text-muted pb-1.5">Monto</label>
@@ -54,27 +59,44 @@
         }
         @foreach (var r in Model.Receivables.OrderBy(x => x.IsCollected).ThenBy(x => x.DueDate))
         {
-            <div class="flex items-center gap-3.5 rounded-xl border border-ash bg-graphite px-5 py-4" data-receivable-row data-id="@r.Id">
-                <span class="flex h-[38px] w-[38px] items-center justify-center rounded-lg @(r.IsCollected ? "bg-ascend/15" : "bg-ash")">
-                    @if (r.IsCollected)
-                    {
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#35D07F" stroke-width="1.8" /></svg>
-                    }
-                    else
-                    {
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#6F7682" stroke-width="1.5" /></svg>
-                    }
-                </span>
-                <span class="flex-1">
-                    <span class="block text-[14.5px] font-medium text-paper">@r.ClientName</span>
-                    <span class="mt-0.5 block text-[11.5px] text-muted">@(r.IsCollected ? "Cobrado" : "Vence") &middot; @r.DueDate.ToString("d MMM")</span>
-                </span>
-                <span class="font-mono text-[15px] font-medium @(r.IsCollected ? "text-muted" : "text-paper")">@("$" + r.Amount.ToString("N0"))</span>
+            <div class="flex flex-col gap-3 rounded-xl border border-ash bg-graphite px-5 py-4" data-receivable-row data-id="@r.Id">
+                <div class="flex items-center gap-3.5">
+                    <span class="flex h-[38px] w-[38px] items-center justify-center rounded-lg @(r.IsCollected ? "bg-ascend/15" : "bg-ash")">
+                        @if (r.IsCollected)
+                        {
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#35D07F" stroke-width="1.8" /></svg>
+                        }
+                        else
+                        {
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#6F7682" stroke-width="1.5" /></svg>
+                        }
+                    </span>
+                    <span class="flex-1">
+                        <span class="block text-[14.5px] font-medium text-paper">@r.ClientName</span>
+                        <span class="mt-0.5 block text-[11.5px] text-muted">
+                            @(r.IsCollected ? "Cobrado" : "Vence") &middot; @r.DueDate.ToString("d MMM")
+                            @if (!string.IsNullOrWhiteSpace(r.Description))
+                            {
+                                @(" · " + r.Description)
+                            }
+                        </span>
+                    </span>
+                    <span class="font-mono text-[15px] font-medium @(r.IsCollected ? "text-muted" : "text-paper")">@("$" + r.Amount.ToString("N0"))</span>
+                </div>
                 @if (!r.IsCollected)
                 {
-                    <button type="button" data-mark-collected class="rounded-lg border border-ash px-3 py-2 text-[11.5px] font-medium text-paper hover:bg-graphite-2">
-                        Marcar cobrado
-                    </button>
+                    <div class="flex items-center gap-2 pl-[50px]">
+                        <select data-receivable-account class="flex-1 rounded-lg border border-ash bg-graphite-2 px-3 py-2 text-[12px] text-paper outline-none focus:border-focus">
+                            @foreach (var account in Model.Accounts)
+                            {
+                                <option value="@account.Id">@account.Name &middot; $@account.Balance.ToString("N0")</option>
+                            }
+                        </select>
+                        <button type="button" data-mark-collected class="rounded-lg border border-ash px-3 py-2 text-[11.5px] font-medium text-paper hover:bg-graphite-2 whitespace-nowrap">
+                            Marcar cobrado
+                        </button>
+                    </div>
+                    <div class="hidden pl-[50px] text-[11.5px] text-harsh" data-receivable-error></div>
                 }
             </div>
         }

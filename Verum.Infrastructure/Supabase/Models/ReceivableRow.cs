@@ -18,6 +18,9 @@ public class ReceivableRow : BaseModel
     [Column("client_name")]
     public string ClientName { get; set; } = string.Empty;
 
+    [Column("description")]
+    public string Description { get; set; } = string.Empty;
+
     [Column("amount")]
     public decimal Amount { get; set; }
 

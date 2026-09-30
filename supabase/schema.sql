@@ -184,6 +184,7 @@ create table receivables (
     user_id      uuid not null references auth.users(id) on delete cascade,
     business_id  uuid not null references businesses(id) on delete cascade,
     client_name  text not null,
+    description  text not null default '',
     amount       numeric(14,2) not null check (amount > 0),
     due_date     timestamptz not null,
     is_collected boolean not null default false

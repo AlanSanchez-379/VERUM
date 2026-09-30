@@ -86,7 +86,7 @@ public class VentasController : NegocioBaseController
                 return BadRequest(new { error = "Ingresá la fecha en que se cobra." });
             }
 
-            await _collectionService.RegisterAsync(business.Id, request.ClientName.Trim(), request.Amount, request.DueDate.Value);
+            await _collectionService.RegisterAsync(business.Id, request.ClientName.Trim(), request.Description.Trim(), request.Amount, request.DueDate.Value);
             var totalUnchanged = await _saleService.GetTotalAsync(business.Id);
             return Ok(new { total = totalUnchanged, credit = true });
         }
