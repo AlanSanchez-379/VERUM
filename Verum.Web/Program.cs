@@ -27,6 +27,15 @@ builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "X-CSRF-TOKEN";
 });
+// Ningun origen externo esta permitido a proposito: la app solo se usa desde
+// si misma. Declarado explicito en vez de dejarlo como una ausencia de config.
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy => policy
+        .WithOrigins()
+        .AllowAnyMethod()
+        .AllowAnyHeader());
+});
 builder.Services.Configure<RazorViewEngineOptions>(options =>
 {
     options.ViewLocationExpanders.Add(new FeatureViewLocationExpander());
@@ -111,6 +120,8 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCors();
 
 app.UseAuthorization();
 

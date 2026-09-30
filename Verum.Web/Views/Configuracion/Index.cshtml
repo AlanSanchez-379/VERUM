@@ -1,0 +1,20 @@
+@{
+    ViewData["Title"] = "Configuración";
+    var email = ViewData["Email"] as string;
+}
+
+<div class="flex flex-col gap-6 max-w-2xl">
+    <div>
+        <div class="text-[19px] font-medium text-paper tracking-tight">Configuración</div>
+        <div class="text-[13px] text-muted mt-1">Tu cuenta en VERUM</div>
+    </div>
+
+    <div class="border border-ash rounded-xl bg-graphite p-6">
+        <div class="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted">Cuenta</div>
+        <div class="text-[15px] text-paper mt-2.5">@(string.IsNullOrEmpty(email) ? "—" : email)</div>
+    </div>
+
+    <div class="border border-ash rounded-xl bg-graphite p-6">
+        <a href="/auth/logout" class="text-[13px] font-medium text-harsh">Cerrar sesión</a>
+    </div>
+</div>
