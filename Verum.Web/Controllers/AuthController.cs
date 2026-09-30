@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Supabase.Gotrue.Exceptions;
 using Verum.Web.Middleware;
 
 namespace Verum.Web.Controllers;
@@ -29,6 +30,12 @@ public class AuthController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(string email, string password)
     {
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        {
+            ViewData["Error"] = "Ingresá tu correo y contraseña.";
+            return View();
+        }
+
         try
         {
             var session = await _client.Auth.SignInWithPassword(email, password);
@@ -41,12 +48,29 @@ public class AuthController : Controller
             SetSessionCookies(session.AccessToken, session.RefreshToken!);
             return Redirect("/Dashboard");
         }
+        catch (GotrueException ex)
+        {
+            ViewData["Error"] = MapLoginError(ex);
+            return View();
+        }
         catch (Exception)
         {
-            ViewData["Error"] = "Correo o contraseña incorrectos.";
+            ViewData["Error"] = "No se pudo conectar. Revisá tu conexión e intentá de nuevo.";
             return View();
         }
     }
+
+    // El mensaje nunca confirma si el correo existe o no (evita que alguien
+    // use el login para saber qué correos están registrados), salvo en los
+    // casos que ya son públicos de por sí, como "confirmá tu correo".
+    private static string MapLoginError(GotrueException ex) => ex.Reason switch
+    {
+        FailureHint.Reason.UserEmailNotConfirmed => "Todavía no confirmaste tu correo. Revisá tu bandeja de entrada.",
+        FailureHint.Reason.UserTooManyRequests => "Demasiados intentos. Esperá un momento y volvé a intentar.",
+        FailureHint.Reason.Offline => "No se pudo conectar. Revisá tu conexión e intentá de nuevo.",
+        FailureHint.Reason.UserBadEmailAddress => "Ese correo no es válido.",
+        _ => "Correo o contraseña incorrectos."
+    };
 
     [HttpGet]
     public IActionResult Register()
@@ -63,6 +87,18 @@ public class AuthController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(string email, string password)
     {
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        {
+            ViewData["Error"] = "Ingresá tu correo y contraseña.";
+            return View();
+        }
+
+        if (password.Length < 6)
+        {
+            ViewData["Error"] = "La contraseña debe tener al menos 6 caracteres.";
+            return View();
+        }
+
         try
         {
             var session = await _client.Auth.SignUp(email, password);
@@ -75,12 +111,26 @@ public class AuthController : Controller
             ViewData["Info"] = "Cuenta creada. Revisa tu correo para confirmarla y luego inicia sesión.";
             return View();
         }
-        catch (Exception ex)
+        catch (GotrueException ex)
         {
-            ViewData["Error"] = ex.Message;
+            ViewData["Error"] = MapRegisterError(ex);
+            return View();
+        }
+        catch (Exception)
+        {
+            ViewData["Error"] = "No se pudo conectar. Revisá tu conexión e intentá de nuevo.";
             return View();
         }
     }
+
+    private static string MapRegisterError(GotrueException ex) => ex.Reason switch
+    {
+        FailureHint.Reason.UserAlreadyRegistered => "Ya existe una cuenta con ese correo. Iniciá sesión en vez de crear una nueva.",
+        FailureHint.Reason.UserBadEmailAddress => "Ese correo no es válido.",
+        FailureHint.Reason.UserTooManyRequests => "Se enviaron demasiados correos en poco tiempo. Esperá unos minutos y volvé a intentar.",
+        FailureHint.Reason.Offline => "No se pudo conectar. Revisá tu conexión e intentá de nuevo.",
+        _ => "No se pudo crear la cuenta. Intentá de nuevo en un momento."
+    };
 
     [HttpGet]
     public async Task<IActionResult> Logout()
