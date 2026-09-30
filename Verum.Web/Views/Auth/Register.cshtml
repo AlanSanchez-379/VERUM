@@ -28,6 +28,13 @@
             <input type="password" name="password" required minlength="6"
                    class="w-full rounded-lg border border-ash bg-graphite-2 px-3.5 py-2.5 text-[13px] text-paper outline-none focus:border-focus" />
         </div>
+        <label class="flex items-start gap-2.5 pt-1 cursor-pointer select-none">
+            <input type="checkbox" name="acceptPrivacy" value="true" required
+                   class="mt-0.5 h-4 w-4 rounded border-ash bg-graphite-2 accent-focus shrink-0" />
+            <span class="text-[11.5px] text-muted leading-snug">
+                Acepto la <a href="/privacidad" target="_blank" class="text-focus hover:underline">política de privacidad</a> y el uso de mis datos como se describe ahí.
+            </span>
+        </label>
         <button type="submit"
                 class="mt-2 rounded-lg bg-paper text-obsidian text-[13px] font-medium py-2.5 hover:bg-paper/90">
             Crear cuenta
@@ -36,8 +43,5 @@
 
     <p class="pt-5 text-center text-[12px] text-muted">
         ¿Ya tenés cuenta? <a href="/auth/login" class="text-paper hover:underline">Iniciá sesión</a>
-    </p>
-    <p class="pt-2 text-center text-[11px] text-muted">
-        Al crear una cuenta aceptás nuestra <a href="/privacidad" class="text-focus hover:underline">política de privacidad</a>.
     </p>
 </div>

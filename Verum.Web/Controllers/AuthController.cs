@@ -85,8 +85,14 @@ public class AuthController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Register(string email, string password)
+    public async Task<IActionResult> Register(string email, string password, bool acceptPrivacy)
     {
+        if (!acceptPrivacy)
+        {
+            ViewData["Error"] = "Tenés que aceptar la política de privacidad para crear una cuenta.";
+            return View();
+        }
+
         if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
         {
             ViewData["Error"] = "Ingresá tu correo y contraseña.";
